@@ -1,0 +1,237 @@
+########################################################################
+#
+# Copyright 2014 Tampere University of Technology, Pori Unit
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#  http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+########################################################################
+
+===============================================================================
+ca_backends
+-----------
+backend_id			INT (primaryKey)
+analysis_uri			VARCHAR (host+port+rest path-method, 2000 characters)
+enabled				TINYINT (boolean, true if this backend is enabled)
+description			VARCHAR (1024 characters, name/description of this backend)
+default_task_datagroups		VARCHAR (255 characters, list of datagroups)
+row_updated			TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created			TIMESTAMP ('0000-00-00 00:00:00')
+
+ca_backend_capabilities
+-----------------------
+backend_id	INT (unique 1/2)
+capability	INT (unique 2/2)
+row_updated	TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created	TIMESTAMP ('0000-00-00 00:00:00')
+
+===============================================================================
+fbj_weight_modifiers
+--------------------
+user_id		BIGINT (unique 1/2, NULL OK)
+value		INTEGER
+modifier_type	INTEGER (unique 2/2)
+row_updated	TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created	TIMESTAMP ('0000-00-00 00:00:00')
+
+===============================================================================
+users_google
+------------
+user_id			BIGINT (primaryKey)
+access_token		VARCHAR (255, NULL OK)
+access_token_expires	BIGINT (unix time, NULL OK)	
+refresh_token		VARCHAR (255, NULL OK)
+token_type		VARCHAR (45, unique, NULL OK)
+nonce			VARCHAR (255, unique, NULL OK)
+nonce_expires		BIGINT (unix time, NULL OK)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+===============================================================================
+users_facebook
+--------------
+user_id			BIGINT (primaryKey)
+access_token		VARCHAR (255 NULL OK)
+access_token_expires	BIGINT (unix time NULL OK)
+nonce			VARCHAR (255, unique NULL OK)
+nonce_expires		BIGINT (unix time NULL OK)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+===============================================================================
+users_twitter
+--------------
+user_id			BIGINT (primaryKey, NULL OK)
+access_token		VARCHAR (255, unique)
+access_token_secret	VARCHAR (255)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+users_twitter_request_tokens
+----------------------------
+user_id			BIGINT (unique NULL OK)
+request_token		VARCHAR (255, unique)
+request_token_secret	VARCHAR (255)
+redirect_uri		VARCHAR (2000, NULL OK, the redirect url given with the original request)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+===============================================================================
+users_ip
+--------
+ip_address		VARCHAR (40, primaryKey)
+user_id			BIGINT
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+	
+===============================================================================
+users
+-----
+user_id			BIGINT (primaryKey, AUTO INCREMENT)
+username		VARCHAR (255, unique)
+password_hash		VARCHAR (255)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+users_external_ids
+------------------
+user_id			BIGINT
+service_id		INT (unique 1/2)
+external_id		VARCHAR (255, unique 2/2)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+users_roles
+-----------
+user_id			BIGINT (primaryKey, AUTO INCREMENT)
+role			VARCHAR (45)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+
+===============================================================================
+ca_tasks
+--------
+task_id			BIGINT (primary key)
+task_type		INT (INDEX)
+user_id			BIGINT (NULL OK)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+ca_tasks_metadata
+-----------------
+task_id			BIGINT (UNIQUE 1/2)
+name			VARCHAR (255 characters, UNIQUE 2/2)
+value			VARCHAR (512 characters)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+ca_tasks_backends
+-----------------
+task_id			BIGINT (UNIQUE 1/2)
+backend_id		INT (UNIQUE 2/2)
+status			INT (INDEX)
+message			VARCHAR (1024, NULL OK)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+ca_tasks_guids
+--------------
+task_id			BIGINT (UNIQUE 1/2)
+guid			VARCHAR (255 characters, global uid, UNIQUE 2/2)
+type			INT (0=photo, 1=reference photo, 2=similar photo, 3=dissimilar photo, 4=deleted photo)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+ca_tasks_guids_status
+---------------------
+backend_id		INT (UNIQUE 1/2)
+guid			VARCHAR (255 characters, global uid, UNIQUE 2/2)
+task_id			BIGINT (the task_id of the most recent task)
+status			INT
+message			VARCHAR (1024, NULL OK)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+ca_tasks_media_objects
+-----------------------
+task_id			BIGINT (UNIQUE 1/3)
+guid			VARCHAR (255 characters, global uid, UNIQUE 2/3, NULL OK)
+media_object_id	VARCHAR (255 characters, UNIQUE 3/3)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+===============================================================================
+ca_photo_friendly_keywords
+--------------------------
+value		VARCHAR (255 characters, index)
+friendly_value	VARCHAR (255 characters, "friendly name/value")
+backend_id	INT (NULL OK)
+row_updated	TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created	TIMESTAMP ('0000-00-00 00:00:00')
+
+ca_media_object_associations
+-----------------------------
+media_object_id 	VARCHAR (255 characters, index)
+guid			VARCHAR (255 characters, index)
+row_updated		TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created		TIMESTAMP ('0000-00-00 00:00:00')
+
+===============================================================================
+ca_picasa_entries
+-----------------
+guid		VARCHAR (255 characters, global uid, primary_key)
+album_id	VARCHAR (255 characters)
+photo_id	VARCHAR (255 characters)
+google_user_id	VARCHAR (255 characters)
+static_url	VARCHAR (2000 characters, NULL OK)
+row_updated	TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created	TIMESTAMP ('0000-00-00 00:00:00')
+
+ca_facebook_entries
+-------------------
+guid		VARCHAR (255 characters, global uid, primary_key)
+user_id		BIGINT (index)
+static_url	VARCHAR (2000 characters)
+object_id	VARCHAR (255 characters, UNIQUE)
+row_updated	TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created	TIMESTAMP ('0000-00-00 00:00:00')
+
+ca_twitter_entries
+------------------
+guid		VARCHAR (255 characters, global uid, primary_key)
+user_id		BIGINT (index, unique 1/2)
+entity_url	VARCHAR (2000 characters)
+entity_id	VARCHAR (255 characters, unique 2/2)
+screen_name	VARCHAR (255 characters, index)
+row_updated	TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created	TIMESTAMP ('0000-00-00 00:00:00')
+
+ca_url_storage_entries
+----------------------
+guid		VARCHAR (255 characters, global uid, primary_key)
+media_type	INT
+user_id		BIGINT (index)
+url		VARCHAR (2000 characters)
+row_updated	TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created	TIMESTAMP ('0000-00-00 00:00:00')
+
+===============================================================================
+fs_files
+--------
+file_id		BIG_INT (primary_key)
+original_name	VARCHAR (255 characters, NULL OK)
+saved_name	VARCHAR (55 characters, UNIQUE)
+user_id		BIGINT (index)
+row_updated	TIMESTAMP (CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+row_created	TIMESTAMP ('0000-00-00 00:00:00')
+

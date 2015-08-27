@@ -1,0 +1,79 @@
+/**
+ * Copyright 2015 Tampere University of Technology, Pori Unit
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package core.tut.pori.dao.filter;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.solr.client.solrj.util.ClientUtils;
+
+import core.tut.pori.dao.SolrQueryBuilder;
+
+/**
+ * Filter that supports range operations (field:[* TO *]) for Solr queries
+ * 
+ */
+public class RangeQueryFilter implements AbstractQueryFilter {
+	private String _fieldName = null;
+	private Object _from = null;
+	private Object _to = null;
+	private QueryType _type = null;
+	
+	/**
+	 * Both from and to can be of any object type, which can be converted to string using java.lang.String.valueOf()
+	 * 
+	 * @param fieldName solr field to target the search on
+	 * @param from start range (inclusive), if null all values <= end will be returned
+	 * @param to end range clause (inclusive), if null all values >= start will be returned
+	 * @throws IllegalArgumentException on bad field name, or if both from and to are null
+	 */
+	public RangeQueryFilter(String fieldName, Object from, Object to) throws IllegalArgumentException{
+		if(StringUtils.isBlank(fieldName)){
+			throw new IllegalArgumentException("Invalid field name : "+fieldName);
+		}
+		if(from == null && to == null){
+			throw new IllegalArgumentException("From and to cannot both be null.");
+		}
+		_fieldName = fieldName;
+		_from = from;
+		_to = to;
+	}
+
+	@Override
+	public void toFilterString(StringBuilder fq) {
+		fq.append('(');
+		fq.append(_fieldName);
+		fq.append(SolrQueryBuilder.SEPARATOR_SOLR_FIELD_VALUE);
+		fq.append('[');
+		if(_from != null){
+			fq.append(ClientUtils.escapeQueryChars(String.valueOf(_from)));
+			fq.append(" TO ");
+		}else{ // everything < _to
+			fq.append("* TO ");
+		}
+		if(_to != null){
+			fq.append(ClientUtils.escapeQueryChars(String.valueOf(_to)));
+			fq.append("]");
+		}else{ // everything > _from
+			fq.append("*]");
+		} // else
+		
+		fq.append(')');
+	}
+
+	@Override
+	public QueryType getQueryType() {
+		return _type;
+	}
+}

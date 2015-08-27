@@ -1,0 +1,5 @@
+guava-18.0.jar
+
+https://code.google.com/p/guava-libraries/
+
+http://www.apache.org/licenses/LICENSE-2.0

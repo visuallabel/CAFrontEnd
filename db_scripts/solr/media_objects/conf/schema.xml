@@ -1,0 +1,175 @@
+<?xml version="1.0" ?>
+<!--
+ Copyright 2015 Tampere University of Technology, Pori Unit
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+  http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!-- ca_frontend media object core definitions -->
+
+<schema name="visual object core" version="1.1">
+  <types>
+   <fieldType name="string"  class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
+   <fieldType name="long" class="solr.TrieLongField" precisionStep="0" positionIncrementGap="0"/>
+   <fieldType name="int" class="solr.TrieIntField" precisionStep="0"/>
+   <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0" positionIncrementGap="0"/>
+   <fieldType name="date" class="solr.TrieDateField" precisionStep="0" positionIncrementGap="0"/>
+   <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+        <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+   </fieldType>
+  </types>
+
+ <fields>   
+  <!-- general -->
+  <field name="_version_" type="long"     indexed="true"  stored="true"/>
+  <field name="id"        type="string"   indexed="true"  stored="true"  multiValued="false" required="true"/>
+  
+  <!-- field for suggestions -->
+  <field name="value_suggest" type="text_suggest" indexed="true" stored="false" omitNorms="true"/>
+  <field name="value_suggest_edge" type="autocomplete_edge" indexed="true" stored="false"/>
+  <field name="value_suggest_ngram" type="autocomplete_ngram" indexed="true" stored="false" omitNorms="true" omitTermFreqAndPositions="true"/>
+  <!-- field for "case insensitive" searches -->
+  <field name="value_search" type="string_case_insensitive" indexed="true" stored="false"/>
+  
+  <!-- dynamic fields -->
+  <dynamicField name="*_i"  type="int"    indexed="true"  stored="true"/>
+  
+  <dynamicField name="*_s"  type="string"  indexed="true"  stored="true"/>
+  <dynamicField name="*_ss" type="string"  indexed="true"  stored="true" multiValued="true"/>
+  <dynamicField name="*_t"  type="text_general"    indexed="true"  stored="true"/>
+  
+  <dynamicField name="*_l"  type="long"   indexed="true"  stored="true"/>
+  
+  <dynamicField name="*_dt"  type="date"    indexed="true"  stored="true"/>
+  
+  <dynamicField name="*_d"  type="double" indexed="true"  stored="true"/>
+  
+ </fields>
+
+ <!-- field to use to determine and enforce document uniqueness. -->
+ <uniqueKey>id</uniqueKey>
+ 
+ <!-- field to be copied -->
+ <copyField source="value_s" dest="value_suggest" />
+ <copyField source="value_s" dest="value_suggest_edge" />
+ <copyField source="value_s" dest="value_suggest_ngram" />
+ <copyField source="value_s" dest="value_search" />
+
+ <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
+ <solrQueryParser defaultOperator="OR"/>
+
+ <types>
+    <!-- text_suggest : Matches whole terms in the suggest text  -->
+    <fieldType name="text_suggest" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+	<charFilter class="solr.HTMLStripCharFilterFactory"/>
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.WordDelimiterFilterFactory" 
+              generateWordParts="1" 
+              generateNumberParts="1"
+              catenateWords="1"
+              catenateNumbers="1"
+              catenateAll="1"
+              splitOnCaseChange="1"
+              splitOnNumerics="1"
+              preserveOriginal="1"
+        />
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.PatternReplaceFilterFactory" pattern="([^\w\d\*æøåÆØÅ ])" replacement=" " replace="all"/>
+      </analyzer>
+      <analyzer type="query">
+		<charFilter class="solr.HTMLStripCharFilterFactory"/>
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.WordDelimiterFilterFactory" 
+              generateWordParts="0" 
+              generateNumberParts="0"
+              catenateWords="0"
+              catenateNumbers="0"
+              catenateAll="0"
+              splitOnCaseChange="0"
+              splitOnNumerics="0"
+        />
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.PatternReplaceFilterFactory" pattern="([^\w\d\*æøåÆØÅ ])" replacement=" " replace="all"/>
+      </analyzer>
+    </fieldType>
+		<!-- autocomplete_edge : Will match from the left of the field, e.g. if the document field
+		     is "A brown fox" and the query is "A bro", it will match, but not "brown"
+		-->
+		<fieldType name="autocomplete_edge" class="solr.TextField">
+			<analyzer type="index">
+				<charFilter class="solr.HTMLStripCharFilterFactory"/>
+				<tokenizer class="solr.KeywordTokenizerFactory"/>
+				<filter class="solr.LowerCaseFilterFactory"/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern="([\.,;:-_])" replacement=" " replace="all"/>
+				<filter class="solr.EdgeNGramFilterFactory" maxGramSize="30" minGramSize="1"/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern="([^\w\d\*æøåÆØÅ ])" replacement="" replace="all"/>
+			</analyzer>
+			<analyzer type="query">
+				<charFilter class="solr.HTMLStripCharFilterFactory"/>
+				<tokenizer class="solr.KeywordTokenizerFactory"/>
+				<filter class="solr.LowerCaseFilterFactory"/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern="([\.,;:-_])" replacement=" " replace="all"/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern="([^\w\d\*æøåÆØÅ ])" replacement="" replace="all"/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern="^(.{30})(.*)?" replacement="$1" replace="all"/>
+			</analyzer>
+		</fieldType>
+		
+		<!-- autocomplete_ngram : Matches any word in the input field, with implicit right truncation.
+		     This means that the field "A brown fox" will be matched by query "bro".
+		     We use this to get partial matches, but these whould be boosted lower than exact and left-anchored
+		-->
+		<fieldType name="autocomplete_ngram" class="solr.TextField">
+			<analyzer type="index">
+				<charFilter class="solr.HTMLStripCharFilterFactory"/>
+				<tokenizer class="solr.StandardTokenizerFactory"/>
+				<filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
+				<filter class="solr.LowerCaseFilterFactory"/>
+				<filter class="solr.EdgeNGramFilterFactory" maxGramSize="20" minGramSize="1"/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern="([^\w\d\*æøåÆØÅ ])" replacement="" replace="all"/>
+			</analyzer>
+			<analyzer type="query">
+				<charFilter class="solr.HTMLStripCharFilterFactory"/>
+				<tokenizer class="solr.StandardTokenizerFactory"/>
+				<filter class="solr.WordDelimiterFilterFactory" generateWordParts="0" generateNumberParts="0" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="0"/>
+				<filter class="solr.LowerCaseFilterFactory"/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern="([^\w\d\*æøåÆØÅ ])" replacement="" replace="all"/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern="^(.{20})(.*)?" replacement="$1" replace="all"/>
+			</analyzer>
+		</fieldType>
+		
+		<!-- This field type assumes that given content is a keyword (i.e. tokenization and such are not executed)
+			 and it also treats all queries as lower case.
+		-->
+		<fieldType name="string_case_insensitive"  class="solr.TextField" omitNorms="true">
+			<analyzer type="index">
+				<tokenizer class="solr.KeywordTokenizerFactory"/>
+				<filter class="solr.LowerCaseFilterFactory"/>
+			</analyzer>
+			<analyzer type="query">
+				<tokenizer class="solr.KeywordTokenizerFactory"/>
+				<filter class="solr.LowerCaseFilterFactory"/>
+			</analyzer>
+		</fieldType>
+ </types>
+</schema>

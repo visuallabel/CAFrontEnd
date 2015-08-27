@@ -1,0 +1,6 @@
+quartz-2.2.1.jar
+quartz-jobs-2.2.1.jar
+
+http://quartz-scheduler.org/
+
+http://www.apache.org/licenses/LICENSE-2.0
