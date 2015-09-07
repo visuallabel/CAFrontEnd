@@ -139,7 +139,10 @@ public class VideoAnalysisTask extends AsyncTask {
 							update.addMediaObject(vo);
 						}
 					} // for
-				} // for objects
+				}else{
+					LOGGER.warn("Ignored video without objects, GUID: "+guid);
+					videoIter.remove();
+				}
 			}
 
 			if(MediaObjectList.isEmpty(insert)){
@@ -158,7 +161,7 @@ public class VideoAnalysisTask extends AsyncTask {
 			}else if(!MediaObjectList.isValid(update)){
 				backendStatus.setStatus(TaskStatus.ERROR);
 				throw new IllegalArgumentException("Invalid media object list.");
-			}else if(!vdao.update(update)){
+			}else if(!videoDAO.update(update)){
 				LOGGER.warn("Failed to update objects.");
 			}
 

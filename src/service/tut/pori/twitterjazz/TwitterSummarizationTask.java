@@ -191,7 +191,6 @@ public class TwitterSummarizationTask extends AsyncTask {
 		backendStatus.setStatus(status);
 
 		try{
-			MediaObjectDAO vdao = ServiceInitializer.getDAOHandler().getSolrDAO(MediaObjectDAO.class);
 			PhotoList photoList = response.getPhotoList();
 			if(PhotoList.isEmpty(photoList)){
 				LOGGER.debug("No photo list returned by backend, id: "+backendId+", task, id: "+taskId);
@@ -200,6 +199,7 @@ public class TwitterSummarizationTask extends AsyncTask {
 				List<String> foundGUIDs = PhotoList.getGUIDs(pdao.getPhotos(null, photoList.getGUIDs(), null, null, null));
 				if(foundGUIDs == null){
 					LOGGER.warn("None of the photos exist, will not process media objects for backend, id: "+backendId+" for task, id: "+taskId);
+					photoList = null; // prevents generation of feedback task for invalid content
 				}else{		
 					List<Photo> photos = photoList.getPhotos();
 					LOGGER.debug("New media objects for photos, photo count: "+photos.size()+", backend, id: "+backendId);
@@ -212,7 +212,7 @@ public class TwitterSummarizationTask extends AsyncTask {
 						}else if(!foundGUIDs.contains(photo.getGUID())){
 							LOGGER.warn("Ignored non-existing photo for backend, id: "+backendId+" for task, id: "+taskId+", photo, GUID: "+photo.getGUID());
 							iter.remove(); // remove to prevent association
-						}else if(!validate(mediaObjects, backendId, photo.getOwnerUserId(), vdao) || !insertOrUpdate(mediaObjects, vdao)){
+						}else if(!validate(mediaObjects, backendId, photo.getOwnerUserId()) || !insertOrUpdate(mediaObjects)){
 							backendStatus.setStatus(TaskStatus.ERROR);
 							throw new IllegalArgumentException("Invalid object list returned by backend, id: "+backendId+" for task, id: "+taskId);
 						}
@@ -224,7 +224,7 @@ public class TwitterSummarizationTask extends AsyncTask {
 			MediaObjectList objects = response.getMediaObjects();
 			if(MediaObjectList.isEmpty(objects)){
 				LOGGER.debug("No media object list returned by backend, id: "+backendId+" for task, id: "+taskId);
-			}else if(!validate(objects, backendId, null, vdao) || !insertOrUpdate(objects, vdao)){
+			}else if(!validate(objects, backendId, null) || !insertOrUpdate(objects)){
 				backendStatus.setStatus(TaskStatus.ERROR);
 				throw new IllegalArgumentException("Invalid object list returned by backend, id: "+backendId+" for task, id: "+taskId);
 			}else{
@@ -241,10 +241,9 @@ public class TwitterSummarizationTask extends AsyncTask {
 	/**
 	 * 
 	 * @param mediaObjects non-null, non-empty validated object list
-	 * @param vdao
 	 * @return true on success
 	 */
-	private static boolean insertOrUpdate(MediaObjectList mediaObjects, MediaObjectDAO vdao){
+	private static boolean insertOrUpdate(MediaObjectList mediaObjects){
 		MediaObjectList updates = new MediaObjectList();
 		MediaObjectList inserts = new MediaObjectList();
 
@@ -255,16 +254,18 @@ public class TwitterSummarizationTask extends AsyncTask {
 				updates.addMediaObject(o);
 			}
 		}
+		
+		PhotoDAO photoDAO = ServiceInitializer.getDAOHandler().getSolrDAO(PhotoDAO.class);
 		if(MediaObjectList.isEmpty(inserts)){
 			LOGGER.debug("Nothing to insert.");
-		}else if(!ServiceInitializer.getDAOHandler().getSolrDAO(PhotoDAO.class).insert(inserts)){
+		}else if(!photoDAO.insert(inserts)){
 			LOGGER.warn("Failed to insert media objects.");
 			return false;
 		}
 
 		if(MediaObjectList.isEmpty(updates)){
 			LOGGER.debug("Nothing to update.");
-		}else if(!vdao.update(updates)){
+		}else if(!photoDAO.update(updates)){
 			LOGGER.warn("Failed to update media objects.");
 			return false;
 		}
@@ -279,10 +280,10 @@ public class TwitterSummarizationTask extends AsyncTask {
 	 * @param mediaObjects non-empty and non-null list of objects
 	 * @param backendId non-null id
 	 * @param userId if null, the check will be ignored
-	 * @param vdao
 	 * @return true if the given parameters were valid
 	 */
-	private static boolean validate(MediaObjectList mediaObjects, Integer backendId, UserIdentity userId, MediaObjectDAO vdao){
+	private static boolean validate(MediaObjectList mediaObjects, Integer backendId, UserIdentity userId){
+		MediaObjectDAO vdao = ServiceInitializer.getDAOHandler().getSolrDAO(MediaObjectDAO.class);
 		vdao.resolveObjectIds(mediaObjects);
 		for(MediaObject object : mediaObjects.getMediaObjects()){
 			if(backendId != object.getBackendId()){

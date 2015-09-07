@@ -22,12 +22,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.quartz.JobBuilder;
 
-import service.tut.pori.contentanalysis.AnalysisBackend;
+import service.tut.pori.contentanalysis.AccessDetails;
 import service.tut.pori.contentanalysis.AccessDetails.Permission;
+import service.tut.pori.contentanalysis.AnalysisBackend;
 import service.tut.pori.contentanalysis.AnalysisBackend.Capability;
 import service.tut.pori.contentanalysis.AsyncTask.TaskStatus;
 import service.tut.pori.contentanalysis.AsyncTask.TaskType;
-import service.tut.pori.contentanalysis.AccessDetails;
 import service.tut.pori.contentanalysis.BackendDAO;
 import service.tut.pori.contentanalysis.BackendStatus;
 import service.tut.pori.contentanalysis.BackendStatusList;

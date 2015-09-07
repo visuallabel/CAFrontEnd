@@ -33,6 +33,7 @@ import service.tut.pori.contentanalysis.CAContentCore.ServiceType;
 import service.tut.pori.contentanalysis.MediaObject;
 import service.tut.pori.contentanalysis.MediaObjectDAO;
 import service.tut.pori.contentanalysis.MediaObjectList;
+import service.tut.pori.contentanalysis.PhotoDAO;
 import service.tut.pori.twitterjazz.TwitterExtractor.ContentType;
 import service.tut.pori.users.twitter.TwitterUserCore;
 import core.tut.pori.context.ServiceInitializer;
@@ -186,7 +187,7 @@ public final class TJContentCore {
 			}
 		}
 		
-		if(!ServiceInitializer.getDAOHandler().getSolrDAO(MediaObjectDAO.class).update(rankedObjects)){
+		if(!ServiceInitializer.getDAOHandler().getSolrDAO(PhotoDAO.class).update(rankedObjects)){
 			LOGGER.warn("Failed to update media objects.");
 		}
 	}

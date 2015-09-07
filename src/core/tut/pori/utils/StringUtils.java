@@ -28,9 +28,6 @@ import org.apache.log4j.Logger;
  */
 public final class StringUtils {
 	private static final ThreadLocal<SimpleDateFormat> ISO_DATE = new ThreadLocal<SimpleDateFormat>(){ // create thread local to overcome multi-thread issues with simple date format
-		/* (non-Javadoc)
-		 * @see java.lang.ThreadLocal#initialValue()
-		 */
 		@Override
 		protected SimpleDateFormat initialValue() {
 			return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");

@@ -100,7 +100,7 @@ public class ClientService {
 	 * {@doc.restlet service="[service.tut.pori.twitterjazz.reference.Definitions#SERVICE_TJ_REFERENCE_CLIENT]" method="[service.tut.pori.twitterjazz.Definitions#METHOD_SUMMARIZE]" type="GET" query="" body_uri=""}
 	 * 
 	 * @param authenticatedUser Note: this method requires authentication, but for the reference implementation, anonymous access is granted.
-	 * @param contentTypes Any combination of content types. By default, all content types will be used. @see service.tut.pori.twitterjazz.TwitterExtractor.ContentType
+	 * @param contentTypes Any combination of content types. By default, all content types will be used. See {@link service.tut.pori.twitterjazz.TwitterExtractor.ContentType}
 	 * @param screenNames The screen names of the accounts to be summarized. The authenticated user must have permissions granted by Twitter to summarize the accounts for the operation to complete successfully. If no screen names are given, the summarization is performed for the user's own Twitter account.
 	 * @param synchronize On <i>true</i> synchronizes the photo content of the user's account. Photo analysis tasks will be created and fully executed for new content using default analysis back-ends prior to starting the summarization task.
 	 */

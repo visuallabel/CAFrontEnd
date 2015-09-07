@@ -100,6 +100,26 @@ public class VideoDAO extends SolrDAO {
 	}
 	
 	/**
+	 * Update the objects and sets all media types to {@link core.tut.pori.utils.MediaUrlValidator.MediaType#VIDEO} for objects with {@link core.tut.pori.utils.MediaUrlValidator.MediaType#UNKNOWN} or null media type.
+	 * @param objects
+	 * @return true on success
+	 * @see service.tut.pori.contentanalysis.MediaObjectDAO#update(MediaObjectList)
+	 */
+	public boolean update(MediaObjectList objects){
+		if(MediaObjectList.isEmpty(objects)){
+			LOGGER.debug("Empty list ignored.");
+			return true;
+		}
+		for(MediaObject object : objects.getMediaObjects()){
+			MediaType mediaType = object.getMediaType();
+			if(mediaType == null || MediaType.UNKNOWN.equals(mediaType)){
+				object.setMediaType(MediaType.VIDEO);	//set all media object MediaType to VIDEO
+			}
+		}
+		return _mediaObjectDAO.update(objects);
+	}
+	
+	/**
 	 * 
 	 * @param video
 	 * @return true on success

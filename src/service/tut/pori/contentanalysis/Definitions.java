@@ -217,7 +217,7 @@ public final class Definitions {
 	 * @see service.tut.pori.contentanalysis.MediaObject#getTimecodes()
 	 */
 	public static final String DATA_GROUP_TIMECODES = "timecodes";
-	/** in general internally used data group for requesting the presence of visibility data in a response @see service.tut.pori.contentanalysis.CAContentCore.Visibility */
+	/** in general internally used data group for requesting the presence of visibility data in a response. See {@link service.tut.pori.contentanalysis.CAContentCore.Visibility} */
 	public static final String DATA_GROUP_VISIBILITY = "visibility";
 	/* media object datagroups */
 	/** data group for requesting media objects of type {@link service.tut.pori.contentanalysis.MediaObject.MediaObjectType#FACE} */

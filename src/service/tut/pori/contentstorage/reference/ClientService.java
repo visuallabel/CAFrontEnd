@@ -43,7 +43,7 @@ public class ClientService {
 	 * 
 	 * @param authenticatedUser Note: this method requires authentication, but for the reference implementation, anonymous access is granted.
 	 * @param backendId Back-ends used for the analysis of the generated tasks. If no back-end IDs are given, the default back-ends will be used. An attempt to give incompatible back-ends may result in failure of the entire task. When providing specific back-ends by Id one should make sure that the back-ends are capable of performing the requested tasks.
-	 * @param serviceId Any combination of supported external providers designated by serviceIds. The supported id values are: 1 (Picasa), 2 (FSIO), 4 (Facebook), 6 (Twitter), 7 (Url Storage). @see service.tut.pori.contentanalysis.CAContentCore.ServiceType
+	 * @param serviceId Any combination of supported external providers designated by serviceIds. The supported id values are: 1 (Picasa), 2 (FSIO), 4 (Facebook), 6 (Twitter), 7 (Url Storage). See {@link service.tut.pori.contentanalysis.CAContentCore.ServiceType}
 	 */
 	@HTTPServiceMethod(name=Definitions.METHOD_SYNCHRONIZE)
 	public void synchronize(

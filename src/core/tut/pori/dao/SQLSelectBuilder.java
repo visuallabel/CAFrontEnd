@@ -254,7 +254,7 @@ public class SQLSelectBuilder {
 	/**
 	 * 
 	 * @param type
-	 * @return the query as a SQL string using type information for parameters (e.g. Limits) @see core.tut.pori.http.parameters.Limits
+	 * @return the query as a SQL string using type information for parameters (e.g. Limits). See {@link core.tut.pori.http.parameters.Limits}
 	 */
 	public String toSQLString(String type){
 		return toSQLString(false, type);

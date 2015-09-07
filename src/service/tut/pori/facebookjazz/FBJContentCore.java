@@ -37,6 +37,7 @@ import service.tut.pori.contentanalysis.CAContentCore.ServiceType;
 import service.tut.pori.contentanalysis.MediaObject;
 import service.tut.pori.contentanalysis.MediaObjectDAO;
 import service.tut.pori.contentanalysis.MediaObjectList;
+import service.tut.pori.contentanalysis.PhotoDAO;
 import service.tut.pori.users.facebook.FacebookUserCore;
 import core.tut.pori.context.ServiceInitializer;
 import core.tut.pori.http.parameters.DataGroups;
@@ -156,7 +157,7 @@ public final class FBJContentCore {
 			voids.add(mediaObjectId);
 		}
 
-		if(!ServiceInitializer.getDAOHandler().getSolrDAO(MediaObjectDAO.class).update(rankedObjects)){
+		if(!ServiceInitializer.getDAOHandler().getSolrDAO(PhotoDAO.class).update(rankedObjects)){
 			LOGGER.warn("Failed to update media objects.");
 		}
 

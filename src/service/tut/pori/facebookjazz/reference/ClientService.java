@@ -134,7 +134,7 @@ public class ClientService {
 	 * {@doc.restlet service="[service.tut.pori.facebookjazz.reference.Definitions#SERVICE_FBJ_REFERENCE_CLIENT]" method="[service.tut.pori.facebookjazz.Definitions#METHOD_SET_TAG_WEIGHTS]" type="POST" query="" body_uri="[service.tut.pori.facebookjazz.reference.Definitions#SERVICE_FBJ_REFERENCE_EXAMPLE]/[service.tut.pori.facebookjazz.Definitions#ELEMENT_WEIGHT_MODIFIER_LIST]"}
 	 * 
 	 * @param authenticatedUser This method requires user authentication. The user must have authorized the use of his/her Facebook account. Note: this method requires authentication, but for the reference implementation, anonymous access is granted.
-	 * @param xml The tag weight modifiers for the user. @see service.tut.pori.facebookjazz.WeightModifierList
+	 * @param xml The tag weight modifiers for the user. See {@link service.tut.pori.facebookjazz.WeightModifierList}
 	 */
 	@HTTPServiceMethod(name = Definitions.METHOD_SET_TAG_WEIGHTS, acceptedMethods={core.tut.pori.http.Definitions.METHOD_POST})
 	public void setTagWeights(
@@ -157,7 +157,7 @@ public class ClientService {
 	 * {@doc.restlet service="[service.tut.pori.facebookjazz.reference.Definitions#SERVICE_FBJ_REFERENCE_CLIENT]" method="[service.tut.pori.facebookjazz.Definitions#METHOD_SUMMARIZE]" type="GET" query="" body_uri=""}
 	 * 
 	 * @param authenticatedUser This method requires user authentication. The user must have authorized the use of his/her Facebook account. Note: this method requires authentication, but for the reference implementation, anonymous access is granted.
-	 * @param contentTypes Any combination of content types. Valid types are: events, generated_tags, groups, likes, photo_descriptions, status_messages, video_descriptions @see service.tut.pori.facebookjazz.FacebookExtractor.ContentType
+	 * @param contentTypes Any combination of content types. Valid types are: events, generated_tags, groups, likes, photo_descriptions, status_messages, video_descriptions. See {@link service.tut.pori.facebookjazz.FacebookExtractor.ContentType}
 	 * @param synchronize On <i>true</i> synchronizes the photo content of the user's account prior to starting the summarization process. Photo analysis tasks will be created for new content using default analysis back-ends.
 	 */
 	@HTTPServiceMethod(name = Definitions.METHOD_SUMMARIZE)

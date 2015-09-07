@@ -151,7 +151,7 @@ public class PhotoFeedbackTask extends AsyncTask{
 			}else if(!MediaObjectList.isValid(update)){
 				status = TaskStatus.ERROR;
 				throw new IllegalArgumentException("Invalid media object list.");
-			}else if(!vdao.update(update)){
+			}else if(!photoDAO.update(update)){
 				LOGGER.warn("Failed to update objects.");
 			}
 

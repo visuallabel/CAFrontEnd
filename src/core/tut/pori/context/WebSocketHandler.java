@@ -243,9 +243,6 @@ public class WebSocketHandler {
 			configs.add(ServerEndpointConfig.Builder.
 					create(WebSocketEndpoint.class, SERVICE_URI+"{"+PARAMETER_END_POINT+"}")
 					.configurator(new ServerEndpointConfig.Configurator(){
-						/* (non-Javadoc)
-						 * @see javax.websocket.server.ServerEndpointConfig.Configurator#getEndpointInstance(java.lang.Class)
-						 */
 						@SuppressWarnings("unchecked")
 						@Override
 						public <T> T getEndpointInstance(Class<T> cls) throws InstantiationException {

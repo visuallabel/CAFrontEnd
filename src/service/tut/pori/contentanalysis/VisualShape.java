@@ -112,7 +112,7 @@ public class VisualShape {
 	 * 
 	 * @return value for the shape. The value differs per shape type.
 	 * @see #setValue(String)
-	 * @see VisualShapeType
+	 * @see service.tut.pori.contentanalysis.VisualShape.VisualShapeType
 	 */
 	public String getValue() {
 		return _value;
@@ -130,7 +130,7 @@ public class VisualShape {
 	/**
 	 * 
 	 * @return type
-	 * @see #setVisualShapeType(VisualShapeType)
+	 * @see #setVisualShapeType(service.tut.pori.contentanalysis.VisualShape.VisualShapeType)
 	 */
 	public VisualShapeType getVisualShapeType() {
 		return _type;

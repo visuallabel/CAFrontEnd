@@ -147,7 +147,7 @@ public class SQLDeleteBuilder {
 	/**
 	 * 
 	 * @param type
-	 * @return the query as an SQL string using the given type of typed parameters (e.g. Limits) @see core.tut.pori.http.parameters.Limits
+	 * @return the query as an SQL string using the given type of typed parameters (e.g. Limits). See {@link core.tut.pori.http.parameters.Limits}
 	 */
 	public String toSQLString(String type){
 		StringBuilder sql = new StringBuilder("DELETE FROM ");

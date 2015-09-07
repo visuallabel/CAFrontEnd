@@ -176,9 +176,6 @@ public class QueryParameter extends HTTPParameter{
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see core.tut.pori.http.parameters.HTTPParameter#initialize(java.io.InputStream)
-	 */
 	@Override
 	public void initialize(InputStream parameterValue) throws IllegalArgumentException {
 		try {

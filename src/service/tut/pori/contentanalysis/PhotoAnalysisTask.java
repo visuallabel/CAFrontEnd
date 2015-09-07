@@ -137,7 +137,10 @@ public class PhotoAnalysisTask extends AsyncTask{
 							update.addMediaObject(vo);
 						}
 					} // for
-				} // for objects
+				}else{
+					LOGGER.warn("Ignored photo without objects, GUID : "+guid);
+					photoIter.remove();
+				}
 			}
 
 			if(MediaObjectList.isEmpty(insert)){
@@ -156,7 +159,7 @@ public class PhotoAnalysisTask extends AsyncTask{
 			}else if(!MediaObjectList.isValid(update)){
 				backendStatus.setStatus(TaskStatus.ERROR);
 				throw new IllegalArgumentException("Invalid media object list.");
-			}else if(!vdao.update(update)){
+			}else if(!photoDAO.update(update)){
 				LOGGER.warn("Failed to update objects.");
 			}
 
