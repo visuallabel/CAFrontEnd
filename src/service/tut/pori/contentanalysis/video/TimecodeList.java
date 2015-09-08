@@ -107,13 +107,13 @@ public class TimecodeList {
 	
 	/**
 	 * 
-	 * @param solrTimecodes
+	 * @param solrTimecodes if null or empty, this does nothing
 	 * @return a populated timecode list
 	 * @throws IllegalArgumentException on bad data
 	 */
 	public static TimecodeList populateTimecodes(List<String> solrTimecodes) throws IllegalArgumentException{
 		if(solrTimecodes == null || solrTimecodes.isEmpty()){
-			LOGGER.debug("Solr timecodes not given.");
+			LOGGER.debug("No timecodes given.");
 			return null;
 		}
 		List<Timecode> timecodes = new ArrayList<>(solrTimecodes.size());
@@ -144,7 +144,7 @@ public class TimecodeList {
 
 	/**
 	 * 
-	 * @param timecodes
+	 * @param timecodes if null or empty this does nothing
 	 * @return list of combined timecodes [{start;end}]
 	 * @throws IllegalArgumentException on missing values
 	 */

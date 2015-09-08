@@ -679,26 +679,22 @@ public final class CAContentCore {
 			return;
 		}
 		
-		List<AnalysisBackend> backends = ServiceInitializer.getDAOHandler().getSQLDAO(BackendDAO.class).getBackends(Capability.BACKEND_FEEDBACK);
+		List<AnalysisBackend> backends = ServiceInitializer.getDAOHandler().getSQLDAO(BackendDAO.class).getBackends(Capability.BACKEND_FEEDBACK); // get list of back-ends with compatible capabilities
 		if(backends == null){
 			LOGGER.debug("No capable back-ends for back-end feedback.");
 			return;
-		}else{
-			LOGGER.debug("Found "+backends.size()+" capable back-ends.");
 		}
 
 		BackendStatusList statuses = new BackendStatusList();
 		for(AnalysisBackend backend : backends){
 			Integer id = backend.getBackendId();
 			if(id.equals(backendId)){ // ignore the given back-end id
-				LOGGER.debug("Ignoring the back-end id of task results, back-end id: "+backendId);
-			}else if(tBackends.getBackendStatus(id) == null){ // and all back-end not part of the task
-				LOGGER.debug("Ignoring non-participating back-end, id: "+id);
-			}else{ 
+				LOGGER.debug("Ignoring the back-end id of task results, back-end id: "+backendId+", task, id: "+taskId);
+			}else if(tBackends.getBackendStatus(id) != null){ // and all back-ends not part of the task
 				statuses.setBackendStatus(new BackendStatus(backend, TaskStatus.NOT_STARTED));
 			}
 		}
-		if(backends.isEmpty()){
+		if(BackendStatusList.isEmpty(statuses)){
 			LOGGER.debug("No capable back-ends for back-end feedback.");
 			return;
 		}

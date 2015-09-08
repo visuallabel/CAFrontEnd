@@ -62,7 +62,12 @@
       		<AppenderRef ref="Console"/>
     	</Logger>
     	
-    	<!-- Filter out twitter summarization stuff -->
+    	<!-- Filter out timecode debug -->
+		<Logger name="service.tut.pori.contentanalysis.video.TimecodeList" level="warn">
+      		<AppenderRef ref="Console"/>
+    	</Logger>
+    	
+    	<!-- Filter out twitter description debug -->
 		<Logger name="service.tut.pori.twitterjazz.TwitterPhotoDescription" level="warn">
       		<AppenderRef ref="Console"/>
     	</Logger>
