@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -169,6 +170,28 @@ public class BackendDAO extends SQLDAO{
 		List<AnalysisBackend> ends = extractBackends(getJdbcTemplate().queryForList(SQL_SELECT_BACKENDS, new Object[]{capability.toInt()}, SQL_SELECT_BACKENDS_SQL_TYPES));
 		setCapabilities(ends);
 		return ends;
+	}
+	
+	/**
+	 * 
+	 * @param capabilities
+	 * @return list of back-ends matching ANY of the given capabilities or null if none was found
+	 */
+	public List<AnalysisBackend> getBackends(Set<Capability> capabilities){
+		if(capabilities == null || capabilities.isEmpty()){
+			LOGGER.debug("Empty capability list.");
+			return null;
+		}
+		List<AnalysisBackend> ends = new ArrayList<>();
+		for(Capability c : capabilities){ // loop all, we could also replace this with SQL join
+			List<AnalysisBackend> tempEnds = getBackends(c);
+			if(tempEnds != null){
+				ends.addAll(tempEnds);
+			}else{
+				LOGGER.debug("No back-ends with capability: "+c.name());
+			}
+		}
+		return (ends.isEmpty() ? null : ends);
 	}
 
 	/**

@@ -87,77 +87,111 @@ public class TwitterSummarizationTask extends AsyncTask {
 			}
 
 			UserIdentity userId = details.getUserId();
-			TwitterExtractor e = TwitterExtractor.getExtractor(userId);
-			if(e == null){
-				LOGGER.error("Failed to create extractor for the given user.");
-				return;
-			}
-			
 			String screenName = details.getScreenName();
 			if(details.isSynchronize()){
-				LOGGER.debug("Synchronizing...");
-				TwitterPhotoStorage twitterStorage = new TwitterPhotoStorage();
-				twitterStorage.setBackends(BackendStatusList.getBackendStatusList(backends.getBackendStatuses(EnumSet.of(Capability.PHOTO_ANALYSIS)))); // filter back-ends with analysis capability
-				
-				if(StringUtils.isBlank(screenName)){
-					LOGGER.debug("Synchronizing without screen names.");
-					twitterStorage.synchronizeAccount(userId);  // there is no need to wait for the analysis tasks to complete
-				}else{
-					LOGGER.debug("Synchronizing with screen names.");
-					twitterStorage.synchronizeAccount(userId, Arrays.asList(screenName)); // there is no need to wait for the analysis tasks to complete
-				}
+				synchronize(backends, screenName, taskId, userId);
 			}else{
 				LOGGER.warn("Synchronization disabled by parameter.");
 			}
 
 			if(details.isSummarize()){
-				LOGGER.debug("Summarizing...");
-				TwitterProfile p = null;
-				if(StringUtils.isBlank(screenName)){
-					LOGGER.debug("No screen name, retrieving authenticated user's profile.");
-					p = e.getProfile(details.getContentTypes());
-					if(p == null){
-						LOGGER.error("Failed to retrieve profile for the given user from Twitter.");
-						return;
-					}
-				}else{
-					LOGGER.debug("Retrieving profile for user with screen name: "+screenName);
-					List<TwitterProfile> profiles = e.getProfiles(details.getContentTypes(), new String[]{screenName});
-					if(profiles == null){
-						LOGGER.error("Failed to retrieve profile for the screen name "+screenName);
-						return;
-					}
-					p = profiles.get(0);
-				}
-				details.setProfile(p);
-	
-				try (CloseableHttpClient client = HttpClients.createDefault()) {
-					BasicResponseHandler h = new BasicResponseHandler();
-					for(BackendStatus backendStatus : backends.getBackendStatuses()){
-						AnalysisBackend end = backendStatus.getBackend();
-						try {
-							Integer backendId = end.getBackendId();
-							String url = end.getAnalysisUri()+Definitions.METHOD_ADD_TASK;
-							LOGGER.debug("Executing POST "+url);
-							HttpPost taskRequest = new HttpPost(url);
-							details.setBackendId(backendId);
-							taskRequest.setHeader("Content-Type", "text/xml; charset=UTF-8");
-							taskRequest.setEntity(new StringEntity((new XMLFormatter()).toString(details), core.tut.pori.http.Definitions.ENCODING_UTF8));				
-	
-							LOGGER.debug("Backend with id: "+backendId+" responded "+client.execute(taskRequest,h));
-						} catch (IOException ex) {
-							LOGGER.warn(ex, ex);
-						}
-					}
-				} catch (IOException ex) {
-					LOGGER.error(ex, ex);
-				}
+				summarize(backends, details, screenName, taskId);
 			}else{
 				LOGGER.warn("Summarization disabled by parameter.");
 			}
 		} catch(Throwable ex){	// catch all exceptions to prevent re-scheduling on error
 			LOGGER.error(ex, ex);
 		}
+	}
+	
+	/**
+	 * 
+	 * @param backends
+	 * @param details
+	 * @param screenName
+	 * @param taskId
+	 */
+	private void summarize(BackendStatusList backends, TwitterSummarizationTaskDetails details, String screenName, Long taskId){
+		LOGGER.debug("Summarizing...");
+		
+		backends = BackendStatusList.getBackendStatusList(backends.getBackendStatuses(EnumSet.of(Capability.TWITTER_SUMMARIZATION))); // filter back-ends with summarization capability
+		if(BackendStatusList.isEmpty(backends)){
+			LOGGER.warn("Aborting summarization... no back-end given with capability "+Capability.TWITTER_SUMMARIZATION.name()+" for task, id: "+taskId);
+			return;
+		}
+		
+		TwitterExtractor e = TwitterExtractor.getExtractor(details.getUserId());
+		if(e == null){
+			LOGGER.error("Failed to create extractor for the given user.");
+			return;
+		}
+		
+		TwitterProfile p = null;
+		if(StringUtils.isBlank(screenName)){
+			LOGGER.debug("No screen name, retrieving authenticated user's profile.");
+			p = e.getProfile(details.getContentTypes());
+			if(p == null){
+				LOGGER.error("Failed to retrieve profile for the given user from Twitter.");
+				return;
+			}
+		}else{
+			LOGGER.debug("Retrieving profile for user with screen name: "+screenName);
+			List<TwitterProfile> profiles = e.getProfiles(details.getContentTypes(), new String[]{screenName});
+			if(profiles == null){
+				LOGGER.error("Failed to retrieve profile for the screen name "+screenName);
+				return;
+			}
+			p = profiles.get(0);
+		}
+		details.setProfile(p);
+
+		try (CloseableHttpClient client = HttpClients.createDefault()) {
+			BasicResponseHandler h = new BasicResponseHandler();
+			for(BackendStatus backendStatus : backends.getBackendStatuses()){
+				AnalysisBackend end = backendStatus.getBackend();
+				try {
+					Integer backendId = end.getBackendId();
+					String url = end.getAnalysisUri()+Definitions.METHOD_ADD_TASK;
+					LOGGER.debug("Executing POST "+url);
+					HttpPost taskRequest = new HttpPost(url);
+					details.setBackendId(backendId);
+					taskRequest.setHeader("Content-Type", "text/xml; charset=UTF-8");
+					taskRequest.setEntity(new StringEntity((new XMLFormatter()).toString(details), core.tut.pori.http.Definitions.ENCODING_UTF8));				
+
+					LOGGER.debug("Backend with id: "+backendId+" responded "+client.execute(taskRequest,h));
+				} catch (IOException ex) {
+					LOGGER.warn(ex, ex);
+				}
+			}
+		} catch (IOException ex) {
+			LOGGER.error(ex, ex);
+		}
+	}
+	
+	/**
+	 * @param backends 
+	 * @param screenName 
+	 * @param taskId 
+	 * @param userId 
+	 */
+	private void synchronize(BackendStatusList backends, String screenName, Long taskId, UserIdentity userId){
+		LOGGER.debug("Synchronizing...");
+		backends = BackendStatusList.getBackendStatusList(backends.getBackendStatuses(EnumSet.of(Capability.PHOTO_ANALYSIS))); // filter back-ends with analysis capability;
+		if(BackendStatusList.isEmpty(backends)){
+			LOGGER.warn("Aborting synchronization... no back-end given with capability "+Capability.PHOTO_ANALYSIS.name()+" for task, id: "+taskId);
+			return;
+		}
+		
+		TwitterPhotoStorage twitterStorage = new TwitterPhotoStorage();
+		twitterStorage.setBackends(backends);
+		
+		if(StringUtils.isBlank(screenName)){
+			LOGGER.debug("Synchronizing without screen names.");
+			twitterStorage.synchronizeAccount(userId);  // there is no need to wait for the analysis tasks to complete
+		}else{
+			LOGGER.debug("Synchronizing with screen names.");
+			twitterStorage.synchronizeAccount(userId, Arrays.asList(screenName)); // there is no need to wait for the analysis tasks to complete
+		} // else
 	}
 
 	/**

@@ -164,7 +164,7 @@ public class PhotoFeedbackTask extends AsyncTask{
 
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		executeAddTask(ServiceInitializer.getDAOHandler().getSQLDAO(PhotoTaskDAO.class), getTaskId(context.getMergedJobDataMap()));
+		executeAddTask(EnumSet.of(Capability.PHOTO_ANALYSIS, Capability.USER_FEEDBACK), ServiceInitializer.getDAOHandler().getSQLDAO(PhotoTaskDAO.class), getTaskId(context.getMergedJobDataMap()));
 	}
 	
 	/**

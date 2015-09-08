@@ -31,9 +31,14 @@ import org.quartz.JobExecutionException;
 import org.springframework.context.ApplicationListener;
 
 import service.tut.pori.contentanalysis.AsyncTask;
+import service.tut.pori.contentanalysis.AnalysisBackend.Capability;
+import service.tut.pori.contentanalysis.AsyncTask.TaskStatus;
 import service.tut.pori.contentanalysis.AsyncTask.TaskType;
 import service.tut.pori.contentanalysis.CAContentCore;
 import service.tut.pori.contentanalysis.CAContentCore.ServiceType;
+import service.tut.pori.contentanalysis.AnalysisBackend;
+import service.tut.pori.contentanalysis.BackendDAO;
+import service.tut.pori.contentanalysis.BackendStatusList;
 import service.tut.pori.contentanalysis.MediaObject;
 import service.tut.pori.contentanalysis.MediaObjectDAO;
 import service.tut.pori.contentanalysis.MediaObjectList;
@@ -53,6 +58,8 @@ import core.tut.pori.utils.MediaUrlValidator.MediaType;
  * FacebookJazz core methods.
  */
 public final class FBJContentCore {
+	/** default capabilities for Facebook tasks */
+	private static final EnumSet<Capability> DEFAULT_CAPABILITIES = EnumSet.of(Capability.FACEBOOK_SUMMARIZATION, Capability.PHOTO_ANALYSIS, Capability.BACKEND_FEEDBACK);
 	private static final DataGroups DATA_GROUP_ALL = new DataGroups(DataGroups.DATA_GROUP_ALL);
 	private static final String JOB_KEY_USER_ID = "userId";
 	private static final Logger LOGGER = Logger.getLogger(FBJContentCore.class);
@@ -200,6 +207,8 @@ public final class FBJContentCore {
 	/**
 	 * Create and schedule facebook summarization task with the given details. If details have taskId given, the task will not be re-added, and will simply be (re-)scheduled.
 	 * 
+	 * If the details contains no back-ends, default back-ends will be added. See {@link #DEFAULT_CAPABILITIES}
+	 *  
 	 * @param details details of the task, if profile object is given, it will be ignored.
 	 * @return the id of the generated task or null on failure
 	 */
@@ -208,6 +217,20 @@ public final class FBJContentCore {
 		if(taskId != null){
 			LOGGER.debug("Task id was given, will not add task.");
 		}else{
+			BackendStatusList backends = details.getBackends();
+			if(BackendStatusList.isEmpty(backends)){
+				LOGGER.debug("No back-ends given, using defaults...");
+				List<AnalysisBackend> ends = ServiceInitializer.getDAOHandler().getSQLDAO(BackendDAO.class).getBackends(DEFAULT_CAPABILITIES);
+				if(ends == null){
+					LOGGER.warn("Aborting task, no capable back-ends.");
+					return null;
+				}
+				
+				backends = new BackendStatusList();
+				backends.setBackendStatus(ends, TaskStatus.NOT_STARTED);
+				details.setBackends(backends);
+			}
+			
 			taskId = ServiceInitializer.getDAOHandler().getSQLDAO(FBTaskDAO.class).insertTask(details);
 			if(taskId == null){
 				LOGGER.error("Task schedule failed: failed to insert new task.");

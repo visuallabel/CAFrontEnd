@@ -45,6 +45,8 @@ import core.tut.pori.users.UserIdentity;
  * Video content analysis core methods.
  */
 public final class VideoContentCore {
+	/** default capabilities for video tasks */
+	public static final EnumSet<Capability> DEFAULT_CAPABILITIES = EnumSet.of(Capability.USER_FEEDBACK, Capability.VIDEO_ANALYSIS, Capability.BACKEND_FEEDBACK);
 	private static final Logger LOGGER = Logger.getLogger(VideoContentCore.class);
 	
 	/**
@@ -152,6 +154,8 @@ public final class VideoContentCore {
 	/**
 	 * Note: if the details already contain a taskId, the task will NOT be re-added to the database, but simply re-scheduled.
 	 * 
+	 * If the details contains no back-ends, default back-ends will be added. See {@link #DEFAULT_CAPABILITIES}
+	 * 
 	 * @param details
 	 * @return task id of the generated task, null if task could not be created
 	 */
@@ -161,6 +165,20 @@ public final class VideoContentCore {
 		if(taskId != null){
 			LOGGER.debug("Task id already present for task, id: "+taskId);
 		}else{
+			BackendStatusList backends = details.getBackends();
+			if(BackendStatusList.isEmpty(backends)){
+				LOGGER.debug("No back-ends given, using defaults...");
+				List<AnalysisBackend> ends = ServiceInitializer.getDAOHandler().getSQLDAO(BackendDAO.class).getBackends(DEFAULT_CAPABILITIES);
+				if(ends == null){
+					LOGGER.warn("Aborting task, no capable back-ends.");
+					return null;
+				}
+				
+				backends = new BackendStatusList();
+				backends.setBackendStatus(ends, TaskStatus.NOT_STARTED);
+				details.setBackends(backends);
+			}
+			
 			taskId = ServiceInitializer.getDAOHandler().getSQLDAO(VideoTaskDAO.class).insertTask(details);
 			if(taskId == null){
 				LOGGER.error("Task schedule failed: failed to insert new video task.");

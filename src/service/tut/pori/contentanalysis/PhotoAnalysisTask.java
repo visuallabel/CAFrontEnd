@@ -15,6 +15,7 @@
  */
 package service.tut.pori.contentanalysis;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import service.tut.pori.contentanalysis.AnalysisBackend.Capability;
 import core.tut.pori.context.ServiceInitializer;
 import core.tut.pori.users.UserIdentity;
 
@@ -38,7 +40,7 @@ public class PhotoAnalysisTask extends AsyncTask{
 
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		executeAddTask(ServiceInitializer.getDAOHandler().getSQLDAO(PhotoTaskDAO.class), getTaskId(context.getMergedJobDataMap()));
+		executeAddTask(EnumSet.of(Capability.PHOTO_ANALYSIS), ServiceInitializer.getDAOHandler().getSQLDAO(PhotoTaskDAO.class), getTaskId(context.getMergedJobDataMap()));
 	}
 
 	/**

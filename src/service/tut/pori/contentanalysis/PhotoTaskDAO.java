@@ -22,7 +22,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import service.tut.pori.contentanalysis.AnalysisBackend.Capability;
 import service.tut.pori.contentanalysis.AsyncTask.TaskType;
 import core.tut.pori.http.parameters.DataGroups;
 import core.tut.pori.http.parameters.Limits;
@@ -41,32 +40,6 @@ public class PhotoTaskDAO extends MediaTaskDAO{
 	private static final EnumSet<MediaType> MEDIA_TYPES = EnumSet.of(MediaType.PHOTO);
 	@Autowired
 	private PhotoDAO _photoDAO = null;
-	
-	/**
-	 * Supported conversions:
-	 * <ul>
-	 *  <li>{@link service.tut.pori.contentanalysis.AsyncTask.TaskType#ANALYSIS} to {@link service.tut.pori.contentanalysis.AnalysisBackend.Capability#PHOTO_ANALYSIS}</li> 
-	 *  <li>{@link service.tut.pori.contentanalysis.AsyncTask.TaskType#SEARCH} to {@link service.tut.pori.contentanalysis.AnalysisBackend.Capability#PHOTO_SEARCH}</li>
-	 * </ul>
-	 * 
-	 * @param taskType
-	 * @return the capability
-	 * @throws IllegalArgumentException on bad taskType
-	 */
-	@Override
-	public Capability resolveCapability(TaskType taskType) throws IllegalArgumentException{
-		if(taskType == null){
-			throw new IllegalArgumentException("TaskType was null.");
-		}
-		switch(taskType){
-			case ANALYSIS:
-				return Capability.PHOTO_ANALYSIS;
-			case SEARCH:
-				return Capability.PHOTO_SEARCH;
-			default:
-				return super.resolveCapability(taskType);
-		}
-	}
 	
 	/**
 	 * Note that media objects provided for any other list than the basic list (see {@link service.tut.pori.contentanalysis.PhotoTaskDetails#getPhotoList()}) will be ignored.

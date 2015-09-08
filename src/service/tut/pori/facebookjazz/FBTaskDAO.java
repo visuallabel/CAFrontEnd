@@ -25,12 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import service.tut.pori.contentanalysis.AbstractTaskDetails;
 import service.tut.pori.contentanalysis.AnalysisBackend;
-import service.tut.pori.contentanalysis.AnalysisBackend.Capability;
 import service.tut.pori.contentanalysis.AsyncTask.TaskType;
 import service.tut.pori.contentanalysis.BackendDAO;
 import service.tut.pori.contentanalysis.Definitions;
-import service.tut.pori.contentanalysis.MediaTaskDAO;
 import service.tut.pori.contentanalysis.MediaObjectDAO;
+import service.tut.pori.contentanalysis.MediaTaskDAO;
 import core.tut.pori.context.ServiceInitializer;
 import core.tut.pori.http.parameters.DataGroups;
 import core.tut.pori.http.parameters.Limits;
@@ -176,31 +175,5 @@ public class FBTaskDAO extends MediaTaskDAO {
 		}
 		
 		return details;
-	}
-	
-	/**
-	 * Supported conversions:
-	 * <ul>
-	 *  <li>{@link service.tut.pori.contentanalysis.AsyncTask.TaskType#FACEBOOK_PROFILE_SUMMARIZATION_FEEDBACK} to {@link service.tut.pori.contentanalysis.AnalysisBackend.Capability#FACEBOOK_SUMMARIZATION}</li> 
-	 *  <li>{@link service.tut.pori.contentanalysis.AsyncTask.TaskType#FACEBOOK_PROFILE_SUMMARIZATION} to {@link service.tut.pori.contentanalysis.AnalysisBackend.Capability#FACEBOOK_SUMMARIZATION}</li>
-	 * </ul>
-	 * 
-	 * @param taskType
-	 * @return the capability
-	 * @throws IllegalArgumentException on bad taskType
-	 */
-	@Override
-	public Capability resolveCapability(TaskType taskType) throws IllegalArgumentException{
-		if(taskType == null){
-			throw new IllegalArgumentException("TaskType was null.");
-		}
-		switch(taskType){
-			case FACEBOOK_PROFILE_SUMMARIZATION_FEEDBACK:
-				LOGGER.debug("Requested "+TaskType.FACEBOOK_PROFILE_SUMMARIZATION_FEEDBACK.name()+", returning "+TaskType.FACEBOOK_PROFILE_SUMMARIZATION.name());
-			case FACEBOOK_PROFILE_SUMMARIZATION:
-				return Capability.FACEBOOK_SUMMARIZATION;
-			default:
-				return super.resolveCapability(taskType);
-		}
 	}
 }

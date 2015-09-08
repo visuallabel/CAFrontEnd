@@ -79,7 +79,6 @@ public class TwitterJazzService {
 	 * 
 	 * @param authenticatedUser
 	 * @param ranks
-	 * 
 	 */
 	@HTTPServiceMethod(name = Definitions.METHOD_SET_RANK, acceptedMethods={core.tut.pori.http.Definitions.METHOD_POST})
 	public void setRank(

@@ -31,7 +31,6 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 
 import service.tut.pori.contentanalysis.AbstractTaskDetails.TaskParameters;
-import service.tut.pori.contentanalysis.AnalysisBackend.Capability;
 import service.tut.pori.contentanalysis.AsyncTask.TaskStatus;
 import service.tut.pori.contentanalysis.AsyncTask.TaskType;
 import core.tut.pori.dao.SQLDAO;
@@ -213,7 +212,7 @@ public class TaskDAO extends SQLDAO {
 		Integer backendId = details.getBackendId();
 		if(backendId != null){
 			BackendStatus s = statuses.getBackendStatus(backendId);
-			if(s == null){	// make sure the backend of the task is in the status list
+			if(s == null){	// make sure the back-end of the task is in the status list
 				LOGGER.debug("BackendId was given, inserting backend to the list of target backends with TaskStatus: "+TaskStatus.NOT_STARTED.name());
 				s = new BackendStatus(new AnalysisBackend(backendId), TaskStatus.NOT_STARTED);
 				statuses.setBackendStatus(s);
@@ -223,22 +222,8 @@ public class TaskDAO extends SQLDAO {
 		Object[] values = new Object[]{details.getTaskId(), null, null, null};
 
 		if(BackendStatusList.isEmpty(statuses)){
-			LOGGER.warn("No backends given, checking if any capable backends exists. Task, id: "+values[0]);
-			TaskType taskType = details.getTaskType();
-			Capability capability = resolveCapability(taskType);
-			if(capability == null){
-				LOGGER.debug("No known capabilities for task type "+taskType+", the task may not start properly, task id: "+values[0]);
-				return;
-			}
-			List<AnalysisBackend> backends = _backendDAO.getBackends(capability);
-			if(backends == null){
-				LOGGER.debug("No capable backends available, the task may not start properly, task id: "+values[0]);
-				return;
-			}
-			LOGGER.debug("Adding task, id: "+values[0]+" for all backend with capability: "+capability.name());
-			for(AnalysisBackend end : backends){
-				statuses.setBackendStatus(new BackendStatus(end, TaskStatus.NOT_STARTED));
-			}
+			LOGGER.warn("No backends given, the task may not start properly. Task, id: "+values[0]);
+			return;
 		}
 
 		JdbcTemplate t = getJdbcTemplate();
@@ -247,31 +232,6 @@ public class TaskDAO extends SQLDAO {
 			values[2] = s.getStatus().toInt();
 			values[3] = s.getMessage();
 			t.update(SQL_INSERT_TASK_BACKEND, values, SQL_INSERT_TASK_BACKEND_TYPES);
-		}
-	}
-	
-	/**
-	 * Supported conversions:
-	 * <ul>
-	 *  <li>{@link service.tut.pori.contentanalysis.AsyncTask.TaskType#BACKEND_FEEDBACK} to {@link service.tut.pori.contentanalysis.AnalysisBackend.Capability#BACKEND_FEEDBACK}</li>
-	 *  <li>{@link service.tut.pori.contentanalysis.AsyncTask.TaskType#FEEDBACK} to {@link service.tut.pori.contentanalysis.AnalysisBackend.Capability#USER_FEEDBACK}</li> 
-	 * </ul>
-	 * @param taskType
-	 * @return the capability or null if no capability found
-	 * @throws IllegalArgumentException on bad taskType
-	 */
-	public Capability resolveCapability(TaskType taskType) throws IllegalArgumentException {
-		if(taskType == null){
-			throw new IllegalArgumentException("TaskType was null.");
-		}
-		switch(taskType){
-			case BACKEND_FEEDBACK:
-				return Capability.BACKEND_FEEDBACK;
-			case FEEDBACK: // user feedback
-				return Capability.USER_FEEDBACK;
-			default:
-				LOGGER.warn("Unknown "+TaskType.class.toString()+" : "+taskType.name());
-				return null;
 		}
 	}
 	

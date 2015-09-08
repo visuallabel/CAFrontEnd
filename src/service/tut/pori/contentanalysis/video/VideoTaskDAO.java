@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import service.tut.pori.contentanalysis.AbstractTaskDetails;
 import service.tut.pori.contentanalysis.AnalysisBackend;
-import service.tut.pori.contentanalysis.AnalysisBackend.Capability;
 import service.tut.pori.contentanalysis.AsyncTask.TaskType;
 import service.tut.pori.contentanalysis.MediaTaskDAO;
 import core.tut.pori.http.parameters.DataGroups;
@@ -196,25 +195,6 @@ public class VideoTaskDAO extends MediaTaskDAO {
 			for(Video v : videos.getVideos()){
 				insertTaskMediaObjects(v.getGUID(), taskId, v.getMediaObjects());
 			}	// for videos
-		}
-	}
-	
-	/** Supported conversions:
-	 * <ul>
-	 *  <li>{@link service.tut.pori.contentanalysis.AsyncTask.TaskType#ANALYSIS} to {@link service.tut.pori.contentanalysis.AnalysisBackend.Capability#VIDEO_ANALYSIS}</li> 
-	 * </ul>
-	 */
-	@Override
-	public Capability resolveCapability(TaskType taskType) throws IllegalArgumentException{
-		if(taskType == null){
-			throw new IllegalArgumentException("TaskType was null.");
-		}
-		
-		switch(taskType){
-			case ANALYSIS:
-				return Capability.VIDEO_ANALYSIS;
-			default:
-				return super.resolveCapability(taskType);
 		}
 	}
 }

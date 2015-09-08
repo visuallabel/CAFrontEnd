@@ -171,7 +171,7 @@ public class VideoFeedbackTask extends AsyncTask{
 
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		executeAddTask(ServiceInitializer.getDAOHandler().getSQLDAO(VideoTaskDAO.class), getTaskId(context.getMergedJobDataMap()));
+		executeAddTask(EnumSet.of(Capability.VIDEO_ANALYSIS, Capability.USER_FEEDBACK), ServiceInitializer.getDAOHandler().getSQLDAO(VideoTaskDAO.class), getTaskId(context.getMergedJobDataMap()));
 	}
 	
 	/**

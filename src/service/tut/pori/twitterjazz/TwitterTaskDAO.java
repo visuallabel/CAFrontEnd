@@ -18,7 +18,6 @@ package service.tut.pori.twitterjazz;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
-import service.tut.pori.contentanalysis.AnalysisBackend.Capability;
 import service.tut.pori.contentanalysis.AsyncTask.TaskType;
 import service.tut.pori.contentanalysis.Definitions;
 import service.tut.pori.contentanalysis.TaskDAO;
@@ -70,29 +69,5 @@ public class TwitterTaskDAO extends TaskDAO {
 		}
 
 		return details;
-	}
-	
-	/**
-	 * Supported conversions:
-	 * <ul>
-	 *  <li>{@link service.tut.pori.contentanalysis.AsyncTask.TaskType#TWITTER_PROFILE_SUMMARIZATION} to {@link service.tut.pori.contentanalysis.AnalysisBackend.Capability#TWITTER_SUMMARIZATION}</li> 
-	 * </ul>
-	 * 
-	 * @param taskType
-	 * @return the capability
-	 * @throws IllegalArgumentException on bad taskType
-	 */
-	@Override
-	public Capability resolveCapability(TaskType taskType) throws IllegalArgumentException{
-		if(taskType == null){
-			throw new IllegalArgumentException("TaskType was null.");
-		}
-		
-		switch(taskType){
-			case TWITTER_PROFILE_SUMMARIZATION:
-				return Capability.TWITTER_SUMMARIZATION;
-			default:
-				return super.resolveCapability(taskType);
-		}
 	}
 }

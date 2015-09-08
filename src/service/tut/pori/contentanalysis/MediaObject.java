@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.beans.Field;
 
@@ -694,6 +695,12 @@ public class MediaObject implements VisualShape.VisualShapeSolrCapable {
 			if(_mediaObjectId == null){
 				LOGGER.debug("No mediaObjectId.");
 			}
+			return false;
+		}else if(MediaObjectType.KEYWORD.equals(_type) && StringUtils.isBlank(_value) && StringUtils.isBlank(_value)){
+			LOGGER.warn("Invalid name or value for object of type "+MediaObjectType.KEYWORD.name());
+			return false;
+		}else if(MediaObjectType.METADATA.equals(_type) && (StringUtils.isBlank(_value) || StringUtils.isBlank(_value))){
+			LOGGER.warn("Invalid name/value pair for object of type "+MediaObjectType.METADATA.name());
 			return false;
 		}else if(_timecodes != null && !TimecodeList.isValid(_timecodes)){
 			LOGGER.warn("Invalid timecode list.");

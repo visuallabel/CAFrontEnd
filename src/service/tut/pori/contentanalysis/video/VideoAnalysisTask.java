@@ -15,6 +15,7 @@
  */
 package service.tut.pori.contentanalysis.video;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import service.tut.pori.contentanalysis.AnalysisBackend.Capability;
 import service.tut.pori.contentanalysis.AsyncTask;
 import service.tut.pori.contentanalysis.BackendStatus;
 import service.tut.pori.contentanalysis.BackendStatusList;
@@ -40,7 +42,7 @@ public class VideoAnalysisTask extends AsyncTask {
 
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		executeAddTask(ServiceInitializer.getDAOHandler().getSQLDAO(VideoTaskDAO.class), getTaskId(context.getMergedJobDataMap()));
+		executeAddTask(EnumSet.of(Capability.VIDEO_ANALYSIS), ServiceInitializer.getDAOHandler().getSQLDAO(VideoTaskDAO.class), getTaskId(context.getMergedJobDataMap()));
 	}
 
 	/**

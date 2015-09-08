@@ -16,6 +16,7 @@
 package service.tut.pori.contentanalysis;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -132,7 +133,7 @@ public class AnalysisBackend {
 	 * @param capabilities
 	 * @return true if this back-end has all of the given capabilities
 	 */
-	public boolean hasCapabilities(EnumSet<Capability> capabilities){
+	public boolean hasCapabilities(Set<Capability> capabilities){
 		if(capabilities == null || capabilities.isEmpty() || _capabilities == null){
 			return false;
 		}else{

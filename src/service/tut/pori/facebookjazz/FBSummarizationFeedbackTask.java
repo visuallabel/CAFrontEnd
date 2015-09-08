@@ -15,11 +15,14 @@
  */
 package service.tut.pori.facebookjazz;
 
+import java.util.EnumSet;
+
 import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import service.tut.pori.contentanalysis.AnalysisBackend;
+import service.tut.pori.contentanalysis.AnalysisBackend.Capability;
 import service.tut.pori.contentanalysis.PhotoAnalysisTask;
 import service.tut.pori.contentanalysis.AsyncTask;
 import service.tut.pori.contentanalysis.BackendStatus;
@@ -55,6 +58,6 @@ public class FBSummarizationFeedbackTask extends AsyncTask {
 
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		executeAddTask(ServiceInitializer.getDAOHandler().getSQLDAO(FBTaskDAO.class), getTaskId(context.getMergedJobDataMap()));
+		executeAddTask(EnumSet.of(Capability.USER_FEEDBACK, Capability.FACEBOOK_SUMMARIZATION), ServiceInitializer.getDAOHandler().getSQLDAO(FBTaskDAO.class), getTaskId(context.getMergedJobDataMap()));
 	}
 }

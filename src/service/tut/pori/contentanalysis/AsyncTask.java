@@ -18,6 +18,7 @@ package service.tut.pori.contentanalysis;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
@@ -271,15 +272,26 @@ public abstract class AsyncTask implements Job{
 	 * - call each backend's addTask method with default parameters
 	 * - use the default TaskDAO to update the back-end details for the associated back-ends
 	 * 
+	 * @param requiredCapabilities capabilities required for the participating back-ends, all back-ends for the task not having ALL of the capabilities are ignored. If null no check is performed.
 	 * @param taskDAO used to resolve task details with taskDAO.getTask(backendId, dataGroups, limits, taskId) with limit parameter null
 	 * @param taskId
 	 */
-	protected void executeAddTask(TaskDAO taskDAO, Long taskId) {
+	protected void executeAddTask(Set<Capability> requiredCapabilities, TaskDAO taskDAO, Long taskId) {
 		try{
 			BackendStatusList backends = taskDAO.getBackendStatus(taskId, TaskStatus.NOT_STARTED);
 			if(BackendStatusList.isEmpty(backends)){
 				LOGGER.warn("No analysis back-ends available for taskId: "+taskId+" with status "+TaskStatus.NOT_STARTED.name());
 				return;
+			}
+			
+			if(requiredCapabilities != null && !requiredCapabilities.isEmpty()){
+				backends = BackendStatusList.getBackendStatusList(backends.getBackendStatuses(requiredCapabilities)); // filter back-ends
+				if(BackendStatusList.isEmpty(backends)){
+					LOGGER.warn("Aborting execute... no back-end given with required capabilities for task, id: "+taskId);
+					return;
+				}
+			}else{
+				LOGGER.debug("Ignoring capability check...");
 			}
 
 			try (CloseableHttpClient client = HttpClients.createDefault()) {

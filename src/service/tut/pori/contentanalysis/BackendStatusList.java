@@ -16,9 +16,10 @@
 package service.tut.pori.contentanalysis;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -79,7 +80,7 @@ public class BackendStatusList{
 	 * @param allOf
 	 * @return all back-ends that have all of the given capabilities or null if none found
 	 */
-	public List<BackendStatus> getBackendStatuses(EnumSet<Capability> allOf){
+	public List<BackendStatus> getBackendStatuses(Set<Capability> allOf){
 		if(isEmpty()){
 			LOGGER.debug("No statuses.");
 			return null;
@@ -189,5 +190,22 @@ public class BackendStatusList{
 		BackendStatusList list = new BackendStatusList();
 		list._backendStatuses = statuses;
 		return list;
+	}
+
+	/**
+	 * Add all back-ends with the given status
+	 * 
+	 * @param ends
+	 * @param status
+	 * @see #setBackendStatus(BackendStatus)
+	 */
+	public void setBackendStatus(Collection<AnalysisBackend> ends, TaskStatus status) {
+		if(ends == null || ends.isEmpty()){
+			LOGGER.debug("Empty back-end list.");
+			return;
+		}
+		for(AnalysisBackend end : ends){
+			setBackendStatus(new BackendStatus(end, status));
+		}
 	}
 }
