@@ -254,6 +254,10 @@ public final class Definitions {
 	/** service id declaration */
 	public static final String SERVICE_ID_URL_STORAGE = "7";
 	
+	/* metadata keys */
+	/** metadata key for related task id */
+	public static final String METADATA_RELATED_TASK_ID = "relatedTaskId";
+	
 	/* solr dynamic field datatypes */
 	private static final String SOLR_DATE = "_dt";
 	private static final String SOLR_DOUBLE = "_d";

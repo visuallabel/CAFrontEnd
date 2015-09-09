@@ -122,7 +122,7 @@ public class FBSummarizationTask extends AsyncTask{
 					try {
 						Integer backendId = end.getBackendId();
 						String url = end.getAnalysisUri()+Definitions.METHOD_ADD_TASK;
-						LOGGER.debug("Executing POST "+url);
+						LOGGER.debug("Task, id: "+taskId+", back-end id: "+backendId+". Executing POST "+url);
 						HttpPost taskRequest = new HttpPost(url);
 						details.setBackendId(backendId);
 						taskRequest.setHeader("Content-Type", "text/xml; charset=UTF-8");

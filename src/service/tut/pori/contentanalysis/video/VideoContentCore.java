@@ -16,7 +16,9 @@
 package service.tut.pori.contentanalysis.video;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -206,6 +208,10 @@ public final class VideoContentCore {
 			throw new IllegalArgumentException("Null type.");
 		}
 		switch (type) {
+			case BACKEND_FEEDBACK:
+				return JobBuilder.newJob(VideoBackendFeedbackTask.class);
+			case FEEDBACK:
+				return JobBuilder.newJob(VideoFeedbackTask.class);
 			case ANALYSIS:
 				return JobBuilder.newJob(VideoAnalysisTask.class);
 			default:
@@ -252,11 +258,14 @@ public final class VideoContentCore {
 			return;
 		}
 		
-		scheduleTask(
-				(new VideoFeedbackTask.FeedbackTaskBuilder(TaskType.BACKEND_FEEDBACK))
+		VideoTaskDetails details = (new VideoBackendFeedbackTask.FeedbackTaskBuilder(TaskType.BACKEND_FEEDBACK))
 				.setBackends(statuses)
 				.addVideos(videos)
-				.build()
-			);
+				.build();	
+		Map<String, String> metadata = new HashMap<>(1);
+		metadata.put(service.tut.pori.contentanalysis.Definitions.METADATA_RELATED_TASK_ID, taskId.toString());
+		details.setMetadata(metadata);
+		
+		scheduleTask(details);
 	}
 }

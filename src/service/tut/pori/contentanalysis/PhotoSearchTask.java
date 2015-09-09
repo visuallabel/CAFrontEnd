@@ -330,7 +330,7 @@ public class PhotoSearchTask{
 				uri.append(_baseParameterString);
 			}	
 			String url = uri.toString();
-			LOGGER.debug("Calling URL: "+url);
+			LOGGER.debug("Calling URL: "+url+" for back-end, id: "+_backend.getBackendId());
 			try (CloseableHttpClient client = HttpClients.createDefault(); CloseableHttpResponse response = client.execute(new HttpPost(url))) {
 				HttpEntity entity = response.getEntity();
 				try (InputStream content = entity.getContent()) {

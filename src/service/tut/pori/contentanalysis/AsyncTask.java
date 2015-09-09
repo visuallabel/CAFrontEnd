@@ -312,7 +312,7 @@ public abstract class AsyncTask implements Job{
 
 					try {
 						String url = end.getAnalysisUri()+Definitions.METHOD_ADD_TASK;
-						LOGGER.debug("Sending "+Definitions.METHOD_ADD_TASK+" to URL: "+url);
+						LOGGER.debug("Task, id: "+taskId+" of type "+details.getTaskType().name()+", back-end id: "+backendId+". Sending "+Definitions.METHOD_ADD_TASK+" to URL: "+url);
 						HttpPost taskRequest = new HttpPost(url);
 						details.setBackendId(backendId);
 						taskRequest.setHeader("Content-Type", "text/xml; charset=UTF-8");

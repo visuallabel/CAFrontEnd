@@ -31,53 +31,58 @@
 		</Root>
 		<!-- Filter out spring's output -->
 		<Logger name="org.springframework" level="warn">
-      		<AppenderRef ref="Console"/>
-    	</Logger>
-    	<!-- Filter out apache's output, this is mostly httpclient -->
+			<AppenderRef ref="Console"/>
+		</Logger>
+		<!-- Filter out apache's output, this is mostly httpclient -->
 		<Logger name="org.apache.http" level="warn">
-      		<AppenderRef ref="Console"/>
-    	</Logger>
-    	<!-- Filter out BeanName generator debug messages -->
+			<AppenderRef ref="Console"/>
+		</Logger>
+		<!-- Filter out BeanName generator debug messages -->
 		<Logger name="core.tut.pori.context.CoreBeanNameGenerator" level="warn">
-      		<AppenderRef ref="Console"/>
-    	</Logger>
-    	<!-- Filter out Quartz scheduler debug messages -->
+			<AppenderRef ref="Console"/>
+		</Logger>
+		<!-- Filter out Quartz scheduler debug messages -->
 		<Logger name="org.quartz.core" level="warn">
-      		<AppenderRef ref="Console"/>
-    	</Logger>
-    	<!-- Filter out http debug -->
+			<AppenderRef ref="Console"/>
+		</Logger>
+		<!-- Filter out http debug -->
 		<Logger name="core.tut.pori.http" level="warn">
-      		<AppenderRef ref="Console"/>
-    	</Logger>
-    	<!-- Filter out utils debug -->
+			<AppenderRef ref="Console"/>
+		</Logger>
+		<!-- Filter out utils debug -->
 		<Logger name="core.tut.pori.utils" level="warn">
-      		<AppenderRef ref="Console"/>
-    	</Logger>
-    	<!-- Filter out core dao debug -->
+			<AppenderRef ref="Console"/>
+		</Logger>
+		<!-- Filter out core dao debug -->
 		<Logger name="core.tut.pori.dao" level="warn">
-      		<AppenderRef ref="Console"/>
-    	</Logger>
-    	<!-- Filter out twitter4j -->
+			<AppenderRef ref="Console"/>
+		</Logger>
+		<!-- Filter out twitter4j -->
 		<Logger name="twitter4j" level="warn">
-      		<AppenderRef ref="Console"/>
-    	</Logger>
-    	
-    	<!-- Filter out timecode debug -->
+			<AppenderRef ref="Console"/>
+		</Logger>
+		
+		<!-- Filter out timecode debug -->
 		<Logger name="service.tut.pori.contentanalysis.video.TimecodeList" level="warn">
-      		<AppenderRef ref="Console"/>
-    	</Logger>
-    	
-    	<!-- Filter out twitter description debug -->
+			<AppenderRef ref="Console"/>
+		</Logger>
+		
+		<!-- Filter out MediaTaskDAO debug -->
+		<Logger name="service.tut.pori.contentanalysis.MediaTaskDAO" level="warn">
+			<AppenderRef ref="Console"/>
+		</Logger>
+		
+		<!-- Filter out twitter description debug -->
 		<Logger name="service.tut.pori.twitterjazz.TwitterPhotoDescription" level="warn">
-      		<AppenderRef ref="Console"/>
-    	</Logger>
+			<AppenderRef ref="Console"/>
+		</Logger>
 		<Logger name="service.tut.pori.twitterjazz.TwitterVideoDescription" level="warn">
-      		<AppenderRef ref="Console"/>
-    	</Logger>
-    	
-    	<!-- Keyword lists are not up-to-date, so ignore messages -->
-    	<Logger name="service.tut.pori.contentanalysis.KeywordsDAO" level="warn">
-      		<AppenderRef ref="Console"/>
-    	</Logger>
+			<AppenderRef ref="Console"/>
+		</Logger>
+		
+		<!-- Keyword lists are not up-to-date, so ignore messages -->
+		<Logger name="service.tut.pori.contentanalysis.KeywordsDAO" level="warn">
+			<AppenderRef ref="Console"/>
+		</Logger>
 	</Loggers>
 </Configuration>

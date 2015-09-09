@@ -290,9 +290,13 @@ public final class PhotoTaskDetails extends AbstractTaskDetails{
 	@Override
 	public Map<String, String> getMetadata() {
 		if(_userConfidence == null){
-			return null;
+			return super.getMetadata();
 		}else{
-			HashMap<String, String> metadata = new HashMap<>(1);
+			Map<String, String> metadata = super.getMetadata();
+			if(metadata == null){
+				metadata = new HashMap<>(1);
+				super.setMetadata(metadata);
+			}
 			metadata.put(Definitions.ELEMENT_CONFIDENCE, _userConfidence.toString());
 			return metadata;
 		}
@@ -310,6 +314,7 @@ public final class PhotoTaskDetails extends AbstractTaskDetails{
 				_userConfidence = Double.valueOf(confidence);
 			}
 		}
+		super.setMetadata(metadata);
 	}
 	
 	@Override

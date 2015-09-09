@@ -18,8 +18,10 @@ package service.tut.pori.contentanalysis;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
@@ -461,7 +463,7 @@ public final class CAContentCore {
 			case ANALYSIS:
 				return JobBuilder.newJob(PhotoAnalysisTask.class);
 			case BACKEND_FEEDBACK:
-				LOGGER.debug("Using "+PhotoFeedbackTask.class.toString()+" for task type "+TaskType.BACKEND_FEEDBACK.name());
+				return JobBuilder.newJob(PhotoBackendFeedbackTask.class);
 			case FEEDBACK:
 				return JobBuilder.newJob(PhotoFeedbackTask.class);
 			case SEARCH:
@@ -717,11 +719,14 @@ public final class CAContentCore {
 			return;
 		}
 		
-		scheduleTask(
-				(new FeedbackTaskBuilder(TaskType.BACKEND_FEEDBACK))
+		PhotoTaskDetails details = (new service.tut.pori.contentanalysis.PhotoBackendFeedbackTask.FeedbackTaskBuilder(TaskType.BACKEND_FEEDBACK))
 				.setBackends(statuses)
 				.addPhotos(photos)
-				.build()
-			);
+				.build();
+		Map<String, String> metadata = new HashMap<>(1);
+		metadata.put(Definitions.METADATA_RELATED_TASK_ID, taskId.toString());
+		details.setMetadata(metadata);
+		
+		scheduleTask(details);
 	}
 }

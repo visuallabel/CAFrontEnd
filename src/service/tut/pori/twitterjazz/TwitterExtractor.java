@@ -115,7 +115,7 @@ public class TwitterExtractor {
 		TwitterExtractor extractor = null;
 		AccessToken token = ServiceInitializer.getDAOHandler().getSQLDAO(TwitterUserDAO.class).getAccessToken(userId);
 		if(token == null){
-			LOGGER.debug("No token.");
+			LOGGER.warn("No token.");
 			return null;
 		}
 		extractor = new TwitterExtractor(userId);
@@ -150,7 +150,7 @@ public class TwitterExtractor {
 				LOGGER.debug("Retrieving user details...");
 				userDetails = TwitterUserDetails.getTwitterUserDetails(_twitter.lookupUsers(screenNames));
 				if(userDetails == null){
-					LOGGER.debug("Failed to resolve user details.");
+					LOGGER.warn("Failed to resolve user details.");
 					return null;
 				}
 			} catch (TwitterException ex) {
@@ -225,7 +225,7 @@ public class TwitterExtractor {
 				LOGGER.debug("Retrieving user details...");
 				userDetails = TwitterUserDetails.getTwitterUserDetails(_twitter.verifyCredentials());
 				if(userDetails == null){
-					LOGGER.debug("Failed to resolve user details.");
+					LOGGER.warn("Failed to resolve user details.");
 					return null;
 				}
 			} catch (TwitterException ex) {
@@ -564,7 +564,7 @@ public class TwitterExtractor {
 
 		LOGGER.debug(exception, exception);
 		if(_abortOnRateLimit){
-			LOGGER.debug("Abort on rate limit on, aborting...");
+			LOGGER.warn("Abort on rate limit on, aborting...");
 			return false;
 		}
 

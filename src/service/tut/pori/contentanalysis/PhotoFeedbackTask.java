@@ -168,21 +168,27 @@ public class PhotoFeedbackTask extends AsyncTask{
 	}
 	
 	/**
-	 * A helper class building PhotoTaskDetails usable with FeedbackTask and executable using CAContentCore
+	 * A helper class building PhotoTaskDetails usable with {@link PhotoFeedbackTask} and executable using {@link service.tut.pori.contentanalysis.CAContentCore#scheduleTask(PhotoTaskDetails)}}
 	 * @see service.tut.pori.contentanalysis.CAContentCore
 	 * @see service.tut.pori.contentanalysis.PhotoTaskDetails
 	 */
 	public static class FeedbackTaskBuilder{
-		private static final EnumSet<Capability> REQUIRED_CAPABILITIES = EnumSet.of(Capability.USER_FEEDBACK);
 		private PhotoTaskDetails _details = null;
 		
 		/**
+		 * for sub-classing
+		 */
+		protected FeedbackTaskBuilder(){
+			// nothing needed
+		}
+		
+		/**
 		 * 
-		 * @param taskType {@link service.tut.pori.contentanalysis.AsyncTask.TaskType#FEEDBACK} or {@link service.tut.pori.contentanalysis.AsyncTask.TaskType#BACKEND_FEEDBACK}
+		 * @param taskType {@link service.tut.pori.contentanalysis.AsyncTask.TaskType#FEEDBACK}
 		 * @throws IllegalArgumentException on unsupported/invalid task type
 		 */
 		public FeedbackTaskBuilder(TaskType taskType) throws IllegalArgumentException {
-			if(taskType != TaskType.FEEDBACK && taskType != TaskType.BACKEND_FEEDBACK){
+			if(taskType != TaskType.FEEDBACK){
 				throw new IllegalArgumentException("Invalid task type.");
 			}
 			_details = new PhotoTaskDetails(taskType);
@@ -417,8 +423,8 @@ public class PhotoFeedbackTask extends AsyncTask{
 		 * @throws IllegalArgumentException on null or invalid back-end
 		 */
 		public FeedbackTaskBuilder addBackend(AnalysisBackend end) throws IllegalArgumentException{
-			if(end == null || !end.hasCapabilities(REQUIRED_CAPABILITIES)){
-				throw new IllegalArgumentException("The given back-end does not have the required capabilities.");
+			if(end == null || !end.hasCapability(Capability.USER_FEEDBACK)){
+				throw new IllegalArgumentException("The given back-end, id: "+end.getBackendId()+" does not have the required capability: "+Capability.USER_FEEDBACK.name());
 			}
 			_details.setBackend(new BackendStatus(end, TaskStatus.NOT_STARTED));
 			return this;
@@ -432,10 +438,10 @@ public class PhotoFeedbackTask extends AsyncTask{
 		 */
 		public FeedbackTaskBuilder setBackends(BackendStatusList backendStatusList){
 			if(BackendStatusList.isEmpty(backendStatusList)){
-				LOGGER.debug("Empty backend status list.");
+				LOGGER.warn("Empty backend status list.");
 				backendStatusList = null;
-			}else if((backendStatusList = BackendStatusList.getBackendStatusList(backendStatusList.getBackendStatuses(REQUIRED_CAPABILITIES))) == null){ // filter out back-ends with invalid capabilities
-				LOGGER.warn("No given list contains no back-ends with valid capabilities.");
+			}else if((backendStatusList = BackendStatusList.getBackendStatusList(backendStatusList.getBackendStatuses(EnumSet.of(Capability.USER_FEEDBACK)))) == null){ // filter out back-ends with invalid capabilities
+				LOGGER.warn("List contains no back-ends with valid capability "+Capability.USER_FEEDBACK.name()+"for task type "+TaskType.FEEDBACK.name());
 			}
 			_details.setBackends(backendStatusList);
 			return this;
@@ -488,10 +494,10 @@ public class PhotoFeedbackTask extends AsyncTask{
 		
 		/**
 		 * 
-		 * @return this
-		 * @throws IllegalArgumentException
+		 * @return new task details based on the given data or null if no data was given
+		 * @throws IllegalArgumentException on bad data
 		 */
-		private PhotoTaskDetails buildFeedback() throws IllegalArgumentException {
+		public PhotoTaskDetails build() throws IllegalArgumentException {
 			boolean hasDeleted = !PhotoList.isEmpty(_details.getDeletedPhotoList());
 			PhotoList photoList = _details.getPhotoList();
 			boolean hasPhotos = !PhotoList.isEmpty(photoList);
@@ -537,34 +543,6 @@ public class PhotoFeedbackTask extends AsyncTask{
 			}
 
 			return _details;
-		}
-		
-		/**
-		 * 
-		 * @return photo task details created from the given values
-		 * @throws IllegalArgumentException on invalid value combination
-		 */
-		private PhotoTaskDetails buildBackendFeedback() throws IllegalArgumentException {
-			PhotoList photoList = _details.getPhotoList();
-			if(PhotoList.isEmpty(photoList)){
-				throw new IllegalArgumentException("Back-end feedback must contain photo list.");
-			}else if(!PhotoList.isEmpty(_details.getReferencePhotoList()) || !PhotoList.isEmpty(_details.getSimilarPhotoList()) || !PhotoList.isEmpty(_details.getDeletedPhotoList()) || !PhotoList.isEmpty(_details.getDissimilarPhotoList())){
-				throw new IllegalArgumentException("Back-end feedback can only contain photo list.");
-			}
-
-			return _details;
-		}
-		
-		/**
-		 * 
-		 * @return new task details based on the given data or null if no data was given
-		 */
-		public PhotoTaskDetails build() {
-			if(_details.getTaskType() == TaskType.FEEDBACK){
-				return buildFeedback();
-			}else{
-				return buildBackendFeedback();
-			}
 		}
 	} // class FeedbackTaskBuilder
 }
