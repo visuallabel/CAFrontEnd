@@ -60,6 +60,7 @@ public class TaskDetails extends AbstractTaskDetails {
 
 	/**
 	 * @return the media
+	 * @see #setMedia(List)
 	 */
 	public List<FuzzyMedia> getMedia() {
 		return _media;
@@ -67,6 +68,7 @@ public class TaskDetails extends AbstractTaskDetails {
 
 	/**
 	 * @param media the media to set
+	 * @see #getMedia()
 	 */
 	public void setMedia(List<FuzzyMedia> media) {
 		_media = media;
