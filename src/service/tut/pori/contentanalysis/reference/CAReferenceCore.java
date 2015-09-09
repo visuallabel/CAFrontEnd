@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,8 +30,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 
 import service.tut.pori.contentanalysis.AnalysisBackend;
-import service.tut.pori.contentanalysis.PhotoParameters;
-import service.tut.pori.contentanalysis.PhotoParameters.AnalysisType;
 import service.tut.pori.contentanalysis.AsyncTask.TaskStatus;
 import service.tut.pori.contentanalysis.AsyncTask.TaskType;
 import service.tut.pori.contentanalysis.BackendStatus;
@@ -43,17 +39,20 @@ import service.tut.pori.contentanalysis.CAContentCore.Visibility;
 import service.tut.pori.contentanalysis.Definitions;
 import service.tut.pori.contentanalysis.DeletedPhotoList;
 import service.tut.pori.contentanalysis.DissimilarPhotoList;
+import service.tut.pori.contentanalysis.MediaObject;
+import service.tut.pori.contentanalysis.MediaObjectList;
 import service.tut.pori.contentanalysis.Photo;
 import service.tut.pori.contentanalysis.PhotoFeedbackList;
 import service.tut.pori.contentanalysis.PhotoList;
+import service.tut.pori.contentanalysis.PhotoParameters;
+import service.tut.pori.contentanalysis.PhotoParameters.AnalysisType;
 import service.tut.pori.contentanalysis.PhotoTaskDetails;
 import service.tut.pori.contentanalysis.PhotoTaskResponse;
 import service.tut.pori.contentanalysis.ReferencePhotoList;
 import service.tut.pori.contentanalysis.ResultInfo;
 import service.tut.pori.contentanalysis.SimilarPhotoList;
-import service.tut.pori.contentanalysis.MediaObject;
-import service.tut.pori.contentanalysis.MediaObjectList;
 import service.tut.pori.contentanalysis.VisualShape;
+import core.tut.pori.context.ServiceInitializer;
 import core.tut.pori.http.RedirectResponse;
 import core.tut.pori.http.Response;
 import core.tut.pori.http.parameters.DataGroups;
@@ -72,8 +71,7 @@ public final class CAReferenceCore {
 	private static final DataGroups DATAGROUPS_BACKEND_RESPONSE = new DataGroups(CAXMLObjectCreator.DATA_GROUP_BACKEND_RESPONSE);	// data groups for add task callback
 	private static final String EXAMPLE_URI = "http://otula.pori.tut.fi/d2i/leijona_album_art.jpg";
 	private static final Logger LOGGER = Logger.getLogger(CAReferenceCore.class);
-	private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(1);
-
+	
 	/**
 	 * 
 	 */
@@ -269,19 +267,20 @@ public final class CAReferenceCore {
 	 * @param post
 	 */
 	public static void executeAsyncCallback(final HttpPost post){
-		SCHEDULER.execute(new Runnable() {			
-			@Override
-			public void run() {
-				try (CloseableHttpClient client = HttpClients.createDefault()) {
-					LOGGER.debug("Waiting "+service.tut.pori.contentanalysis.reference.Definitions.ASYNC_CALLBACK_DELAY/1000+" seconds...");
-					Thread.sleep(service.tut.pori.contentanalysis.reference.Definitions.ASYNC_CALLBACK_DELAY);
-
-					LOGGER.debug("Calling uri: "+post.getURI().toString());
-					LOGGER.debug("Server responded: "+client.execute(post, new BasicResponseHandler()));
-				} catch (IOException | InterruptedException ex) {
-					LOGGER.error(ex, ex);
+		ServiceInitializer.getExecutorHandler().getExecutor().execute(
+			new Runnable() {
+				@Override
+				public void run() {
+					try (CloseableHttpClient client = HttpClients.createDefault()) {
+						LOGGER.debug("Waiting "+service.tut.pori.contentanalysis.reference.Definitions.ASYNC_CALLBACK_DELAY/1000+" seconds...");
+						Thread.sleep(service.tut.pori.contentanalysis.reference.Definitions.ASYNC_CALLBACK_DELAY);
+	
+						LOGGER.debug("Calling uri: "+post.getURI().toString());
+						LOGGER.debug("Server responded: "+client.execute(post, new BasicResponseHandler()));
+					} catch (IOException | InterruptedException ex) {
+						LOGGER.error(ex, ex);
+					}
 				}
-			}
 		});
 	}
 

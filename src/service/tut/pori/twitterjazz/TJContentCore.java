@@ -56,7 +56,7 @@ import core.tut.pori.utils.MediaUrlValidator.MediaType;
  */
 public final class TJContentCore {
 	/** default capabilities for Twitter tasks */
-	private static final EnumSet<Capability> DEFAULT_CAPABILITIES = EnumSet.of(Capability.TWITTER_SUMMARIZATION, Capability.PHOTO_ANALYSIS, Capability.BACKEND_FEEDBACK);
+	public static final EnumSet<Capability> DEFAULT_CAPABILITIES = EnumSet.of(Capability.TWITTER_SUMMARIZATION, Capability.PHOTO_ANALYSIS, Capability.BACKEND_FEEDBACK);
 	private static final Logger LOGGER = Logger.getLogger(TJContentCore.class);
 	private static final String JOB_KEY_USER_ID = "userId";
 	private static final EnumSet<MediaType> MEDIA_TYPES_TJ = EnumSet.allOf(MediaType.class);

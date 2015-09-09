@@ -51,13 +51,18 @@ public class ExecutorHandler {
 	public void close() {
 		if(_scheduler != null){
 			try {
-				_scheduler.shutdown();
+				_scheduler.shutdown(true);
 			} catch (SchedulerException ex) {
 				LOGGER.error(ex, ex);
 			}
 		}
 		if(_executor != null){
-			_executor.shutdownNow();
+			_executor.shutdown();
+			try {
+				_executor.awaitTermination(2, TimeUnit.SECONDS);	//await for a short while before giving up
+			} catch (InterruptedException ex) {
+				LOGGER.error(ex, ex);
+			}
 		}
 	}
 

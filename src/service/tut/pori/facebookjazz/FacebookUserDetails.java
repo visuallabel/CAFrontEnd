@@ -15,7 +15,6 @@
  */
 package service.tut.pori.facebookjazz;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -30,6 +29,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 
 import com.restfb.types.NamedFacebookType;
 import com.restfb.types.User;
@@ -62,7 +62,7 @@ import core.tut.pori.utils.ISODateAdapter;
 @XmlRootElement(name=Definitions.ELEMENT_USER_DETAILS)
 @XmlAccessorType(XmlAccessType.NONE)
 public class FacebookUserDetails {
-	private static final SimpleDateFormat RESTFB_FB_SHORT = new SimpleDateFormat(DateUtils.FACEBOOK_SHORT_DATE_FORMAT);
+	private static final FastDateFormat RESTFB_FB_SHORT = FastDateFormat.getInstance(DateUtils.FACEBOOK_SHORT_DATE_FORMAT);
 	private static final String SEPARATOR_LASTNAME_FIRSTNAME = ",";
 	private static final String SEPARATOR_FIRSTNAME_MIDDLENAME = " ";
 	private User _user = null;

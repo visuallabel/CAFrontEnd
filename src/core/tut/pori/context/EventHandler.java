@@ -101,6 +101,10 @@ public class EventHandler {
 			}
 			
 			ExecutorService executor = ServiceInitializer.getExecutorHandler().getExecutor();
+			if(executor == null){
+				LOGGER.warn("No executor available. Ignoring multicast.");
+				return;
+			}
 			for(final ApplicationListener listener : listeners){
 				executor.execute(new Runnable() {
 					@SuppressWarnings("unchecked")

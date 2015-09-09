@@ -59,7 +59,7 @@ import core.tut.pori.utils.MediaUrlValidator.MediaType;
  */
 public final class FBJContentCore {
 	/** default capabilities for Facebook tasks */
-	private static final EnumSet<Capability> DEFAULT_CAPABILITIES = EnumSet.of(Capability.FACEBOOK_SUMMARIZATION, Capability.PHOTO_ANALYSIS, Capability.BACKEND_FEEDBACK);
+	public static final EnumSet<Capability> DEFAULT_CAPABILITIES = EnumSet.of(Capability.FACEBOOK_SUMMARIZATION, Capability.PHOTO_ANALYSIS, Capability.BACKEND_FEEDBACK);
 	private static final DataGroups DATA_GROUP_ALL = new DataGroups(DataGroups.DATA_GROUP_ALL);
 	private static final String JOB_KEY_USER_ID = "userId";
 	private static final Logger LOGGER = Logger.getLogger(FBJContentCore.class);

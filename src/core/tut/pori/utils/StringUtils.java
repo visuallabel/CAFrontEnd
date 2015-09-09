@@ -16,10 +16,10 @@
 package core.tut.pori.utils;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.log4j.Logger;
 
 
@@ -27,12 +27,7 @@ import org.apache.log4j.Logger;
  * A thread-safe utility class for processing Strings.
  */
 public final class StringUtils {
-	private static final ThreadLocal<SimpleDateFormat> ISO_DATE = new ThreadLocal<SimpleDateFormat>(){ // create thread local to overcome multi-thread issues with simple date format
-		@Override
-		protected SimpleDateFormat initialValue() {
-			return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-		}
-	};
+	private static final FastDateFormat ISO_DATE = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ssZ");
 	private static final Logger LOGGER = Logger.getLogger(StringUtils.class);
 	private static final String ZULU = "Z";
 
@@ -91,7 +86,7 @@ public final class StringUtils {
 	 * @return null if null passed, otherwise the passed string in format yyyy-MM-dd'T'HH:mm:ssZ
 	 */
 	public static String dateToISOString(Date date){
-		return (date == null ? null : ISO_DATE.get().format(date));
+		return (date == null ? null : ISO_DATE.format(date));
 	}
 	
 	/**
@@ -120,7 +115,7 @@ public final class StringUtils {
 			}else if(date.endsWith(ZULU)){ // strip the tailing Z as it creates issues with simple date format
 				date = date.substring(0, date.length()-1)+"+0000";
 			}
-			return ISO_DATE.get().parse(date);	
+			return ISO_DATE.parse(date);	
 		} catch (ParseException ex) {//+0300
 			LOGGER.error(ex, ex);
 			return null;
