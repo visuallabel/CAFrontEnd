@@ -195,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `ca_twitter_entries` (
   `row_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `row_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`guid`),
-  UNIQUE KEY `entity_id_user_id_UNIQUE` (`user_id`,`entity_id`),
+  UNIQUE KEY `entity_id_screen_name_user_id_UNIQUE` (`user_id`,`entity_id`, `screen_name`),
   KEY `user_id_INDEX` (`user_id`),
   KEY `screen_name_INDEX` (`screen_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
