@@ -61,7 +61,7 @@ public class TwitterLocation {
 	 */
 	public static TwitterLocation getTwitterLocation(String location){
 		if(StringUtils.isBlank(location)){
-			LOGGER.debug("Bad location string: "+location);
+			LOGGER.warn("Bad location string: "+location);
 			return null;
 		}
 		TwitterLocation tl = new TwitterLocation();

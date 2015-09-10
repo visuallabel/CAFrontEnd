@@ -320,7 +320,7 @@ public final class CAContentCore {
 	 */
 	public static String generateRedirectUrl(String guid, ServiceType type){
 		if(type == null || StringUtils.isBlank(guid)){
-			LOGGER.error("GUID or service type was null.");
+			LOGGER.warn("GUID or service type was null.");
 			return null;
 		}
 		return ServiceInitializer.getPropertyHandler().getRESTBindContext()+Definitions.SERVICE_CA+"/"+Definitions.METHOD_REDIRECT+"?"+Definitions.PARAMETER_GUID+"="+guid+"&"+Definitions.PARAMETER_SERVICE_ID+"="+type.getServiceId();
