@@ -17,7 +17,6 @@ package service.tut.pori.contentanalysis.video;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import service.tut.pori.contentanalysis.CAContentCore.ServiceType;
@@ -72,8 +71,7 @@ public class Video extends Media {
 	 * 
 	 * @return URL
 	 * @see #setUrl(String)
-	 */  
-	@XmlElement(name = service.tut.pori.contentanalysis.Definitions.ELEMENT_URL)
+	 */
 	@Override
 	public String getUrl() {
 		String url = super.getUrl();

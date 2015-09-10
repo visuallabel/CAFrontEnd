@@ -93,9 +93,6 @@ public final class URLContentStorage extends ContentStorage {
 		return SERVICE_TYPE;
 	}
 
-	/* (non-Javadoc)
-	 * @see service.tut.pori.contentstorage.ContentStorage#getBackendCapabilities()
-	 */
 	@Override
 	public EnumSet<Capability> getBackendCapabilities() {
 		return CAPABILITIES;

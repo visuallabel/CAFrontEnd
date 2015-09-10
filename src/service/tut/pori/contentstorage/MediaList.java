@@ -74,9 +74,6 @@ public class MediaList extends ResponseData {
 		return (media == null || media.isEmpty());
 	}
 
-	/* (non-Javadoc)
-	 * @see core.tut.pori.http.ResponseData#getDataClasses()
-	 */
 	@Override
 	public Class<?>[] getDataClasses() {
 		if(isEmpty()){

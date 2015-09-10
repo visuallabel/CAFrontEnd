@@ -72,6 +72,11 @@
 			<AppenderRef ref="Console"/>
 		</Logger>
 		
+		<!-- Filter out MediaObjectDAO debug -->
+		<Logger name="service.tut.pori.contentanalysis.MediaObjectDAO" level="warn">
+			<AppenderRef ref="Console"/>
+		</Logger>
+		
 		<!-- Filter out twitter description debug -->
 		<Logger name="service.tut.pori.twitterjazz.TwitterPhotoDescription" level="warn">
 			<AppenderRef ref="Console"/>

@@ -50,9 +50,6 @@ public class Example extends ResponseData {
 		_media = media;
 	}
 
-	/* (non-Javadoc)
-	 * @see core.tut.pori.http.ResponseData#getDataClasses()
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Class<?>[] getDataClasses() {

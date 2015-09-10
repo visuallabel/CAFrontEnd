@@ -94,9 +94,6 @@ public final class FacebookPhotoStorage extends ContentStorage {
 		return ServiceInitializer.getDAOHandler().getSQLDAO(FacebookDAO.class).getUrl(details.getGuid());
 	}
 
-	/* (non-Javadoc)
-	 * @see service.tut.pori.contentstorage.ContentStorage#getBackendCapabilities()
-	 */
 	@Override
 	public EnumSet<Capability> getBackendCapabilities() {
 		return CAPABILITIES;

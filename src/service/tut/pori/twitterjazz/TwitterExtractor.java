@@ -353,9 +353,10 @@ public class TwitterExtractor {
 			LOGGER.debug("Resolving photo GUIDs for descriptions.");
 			for(TwitterPhotoDescription d : descriptions){
 				String objectId = d.getEntityId();
+				String screenName = d.getFromName();
 				for(Iterator<TwitterEntry> eIter = entries.iterator(); eIter.hasNext();){
 					TwitterEntry e = eIter.next();
-					if(e.getEntityId().equals(objectId)){
+					if(e.getEntityId().equals(objectId) && e.getScreenName().equals(screenName)){ // the same entity id might appear for different users' content so also match by screen name
 						String guid = e.getGUID();
 						d.setPhotoGUID(guid);
 						d.setServiceType(TwitterPhotoStorage.SERVICE_TYPE); // no need to check from database, all photos from TwitterDAO entries are of the same type
@@ -368,12 +369,12 @@ public class TwitterExtractor {
 										d.addTag(TwitterPhotoTag.getTwitterTag(vo));
 									} // for
 								} // if photo had media objects
-							}else{ // ..though there is theoretical possibility that the photo has been removed in between retrievals (which are not in a transaction), and were not found anymore
+							}else{ // ..though there is theoretical possibility that the photo has been removed in between retrievals (which are not in a transaction), and does not exist anymore
 								LOGGER.warn("No photo found, GUID: "+guid);
 								d.setPhotoGUID(null); // not valid anymore
 							} // else
 						} // if
-						eIter.remove();
+						eIter.remove(); // remove entry to prevent unnecessary looping in the following loops
 					}
 				} // for entries
 			} // for descriptions

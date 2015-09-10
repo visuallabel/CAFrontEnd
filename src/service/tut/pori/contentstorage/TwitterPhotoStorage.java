@@ -100,9 +100,6 @@ public final class TwitterPhotoStorage extends ContentStorage {
 		super(autoSchedule);
 	}
 	
-	/* (non-Javadoc)
-	 * @see service.tut.pori.contentstorage.ContentStorage#getBackendCapabilities()
-	 */
 	@Override
 	public EnumSet<Capability> getBackendCapabilities() {
 		return CAPABILITIES;
@@ -303,9 +300,10 @@ public final class TwitterPhotoStorage extends ContentStorage {
 						Entry<TwitterEntry, Photo> entry = entryIter.next();
 						TwitterEntry twitterEntry = entry.getKey();
 						String entityId = twitterEntry.getEntityId();
+						String screenName = twitterEntry.getScreenName();
 						for(Iterator<TwitterEntry> existingIter = existing.iterator();existingIter.hasNext();){
 							TwitterEntry exEntry = existingIter.next();
-							if(exEntry.getEntityId().equals(entityId)){  // already added
+							if(exEntry.getEntityId().equals(entityId) && exEntry.getScreenName().equals(screenName)){  // already added
 								String guid = exEntry.getGUID();
 								twitterEntry.setGUID(guid);
 								Photo p = entry.getValue();

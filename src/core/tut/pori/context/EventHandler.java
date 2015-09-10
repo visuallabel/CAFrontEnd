@@ -94,7 +94,7 @@ public class EventHandler {
 		@SuppressWarnings("rawtypes")
 		@Override
 		public void multicastEvent(final ApplicationEvent event, ResolvableType type) {
-			Collection<ApplicationListener<?>> listeners = getApplicationListeners(event, (type == null ? ResolvableType.forClass(getClass()) : type));
+			Collection<ApplicationListener<?>> listeners = getApplicationListeners(event, (type == null ? ResolvableType.forClass(event.getClass()) : type));
 			if(listeners.isEmpty()){
 				LOGGER.debug("No listeners for event "+event.getClass().toString());
 				return;

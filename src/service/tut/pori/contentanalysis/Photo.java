@@ -17,7 +17,6 @@ package service.tut.pori.contentanalysis;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import service.tut.pori.contentanalysis.CAContentCore.ServiceType;
@@ -99,8 +98,7 @@ public class Photo extends Media {
 	 * 
 	 * @return URL
 	 * @see #setUrl(String)
-	 */  
-	@XmlElement(name = Definitions.ELEMENT_URL)
+	 */
 	@Override
 	public String getUrl() {
 		String url = super.getUrl();
