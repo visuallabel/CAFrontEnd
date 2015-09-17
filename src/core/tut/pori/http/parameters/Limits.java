@@ -52,8 +52,8 @@ public final class Limits extends HTTPParameter{
 	/**
 	 * Initialize limits
 	 * 
-	 * @param startItem if < 0, 0 will be used
-	 * @param endItem the last item index (inclusively), if <= startItem, startItem+DEFAULT_MAX_ITEM-1 will be used
+	 * @param startItem if &lt; 0, 0 will be used
+	 * @param endItem the last item index (inclusively), if &lt;= startItem, startItem+DEFAULT_MAX_ITEM-1 will be used
 	 */
 	public Limits(int startItem, int endItem){
 		_typeLimits.put(null, new TypeLimits(startItem, endItem, null));
@@ -288,11 +288,12 @@ public final class Limits extends HTTPParameter{
 		
 		/**
 		 * Create new TypeLimits. The limit validity will be checked:
-		 * - If end item is smaller than start item, this will throw an exception
-		 * - if start item is less than 0, it will be set to 0
-		 * - if end item is INTEGER MAX, it will be set to INTEGER_MAX - 1. This is because the end item is included in the limits, which would cause interval START - END cause limit overflow (INTEGER MAX + 1)
-		 * - if end item is < 0, the maximum item count is assumed to be 0 and getMaxItems() will return 0 regardless of the given start item
-		 * 
+		 * <ul>
+		 * 	<li>If end item is smaller than start item, this will throw an exception</li>
+		 * 	<li>if start item is less than 0, it will be set to 0</li>
+		 * 	<li>if end item is INTEGER MAX, it will be set to INTEGER_MAX - 1. This is because the end item is included in the limits, which would cause interval START - END cause limit overflow (INTEGER MAX + 1)</li>
+		 * 	<li>if end item is &lt; 0, the maximum item count is assumed to be 0 and getMaxItems() will return 0 regardless of the given start item</li>
+		 * </ul>
 		 * @param startItem
 		 * @param endItem
 		 * @param typeName

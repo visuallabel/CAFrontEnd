@@ -49,19 +49,19 @@ public final class HTTPParameterUtil {
 
 	/**
 	 * 
-	 * separates parameter values based on the defined parameter separator (",")
+	 * <p>separates parameter values based on the defined parameter separator (",")</p>
 	 * 
-	 * This is a helper method for parsing parameter values. By default the map returned by HttpServlerRequest (e.g. getParameterMap())
+	 * <p>This is a helper method for parsing parameter values. By default the map returned by HttpServlerRequest (e.g. getParameterMap())
 	 * will not handle parameter values separated by ",". Also, it will do automatic URL de-coding causing "," and URL encoded comma "%2C" to appear as the same character, making further value separation impossible.
-	 * Note that POST body parameters will NOT be separated by "," character because it is impossible to retrieve the raw body parameter list without implementing the entire HTTP request parsing manually through InputStreams.
+	 * Note that POST body parameters will NOT be separated by "," character because it is impossible to retrieve the raw body parameter list without implementing the entire HTTP request parsing manually through InputStreams.</p>
 	 * 
-	 * e.g. the query string .../method?parameter=value1,value2 will generate a map in which "parameter" is associated with String[] = {"value1,value2"}, and not with String[] = {"value1","value2"}.
+	 * <p>e.g. the query string .../method?parameter=value1,value2 will generate a map in which "parameter" is associated with String[] = {"value1,value2"}, and not with String[] = {"value1","value2"}.</p>
 	 * 
-	 * similarly, the query string .../method?parameter=value1,value2&parameter=value3 will generate a map in which "parameter" is associated with String[] = {"value1,value2","value3"}, and not with String[] = {"value1","value2","value3"}.
+	 * <p>Similarly, the query string .../method?parameter=value1,value2&amp;parameter=value3 will generate a map in which "parameter" is associated with String[] = {"value1,value2","value3"}, and not with String[] = {"value1","value2","value3"}.</p>
 	 * 
-	 * The returned map will contain parameters associated with String[] = {"value1", "value2"} in URL decoded form, preserving the encoded comma (e.g. String[] = {"value1,value2"} if the query string contained ?parameter=value1%2Cvalue2
+	 * <p>The returned map will contain parameters associated with String[] = {"value1", "value2"} in URL decoded form, preserving the encoded comma (e.g. String[] = {"value1,value2"} if the query string contained ?parameter=value1%2Cvalue2</p>
 	 * 
-	 * This method is uses the HttpServletRequest's parameter map as its basis, and thus, the returned list may contain both URL parameters and url-encoded-form parameters from HTTP body.
+	 * <p>This method is uses the HttpServletRequest's parameter map as its basis, and thus, the returned list may contain both URL parameters and url-encoded-form parameters from HTTP body.</p>
 	 *
 	 * 
 	 * @param httpServletRequest

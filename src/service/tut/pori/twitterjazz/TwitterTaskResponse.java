@@ -12,7 +12,7 @@ import service.tut.pori.contentanalysis.MediaObjectList;
 /**
  * Response received from an analysis back-end for a summarization task.
  * 
- * <h2>Conditional Elements</h>
+ * <h2>Conditional Elements</h2>
  * <ul>
  *  <li>{@value service.tut.pori.contentanalysis.Definitions#ELEMENT_PHOTOLIST}</li>
  *  <li>{@value service.tut.pori.contentanalysis.Definitions#ELEMENT_MEDIA_OBJECTLIST}</li>

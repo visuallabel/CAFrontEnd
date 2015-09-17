@@ -33,7 +33,7 @@ import core.tut.pori.http.parameters.StringParameter;
 
 
 /**
- * This service includes test API for contentAnalysis service (analysis example APIs & such)
+ * This service includes test API for contentAnalysis service (analysis example APIs &amp; such)
  * 
  * The reference implementations will not belong here anymore, clean this class of unneeded methods,
  * or remove the whole class if needed

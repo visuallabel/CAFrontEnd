@@ -34,8 +34,8 @@ public class RangeQueryFilter implements AbstractQueryFilter {
 	 * Both from and to can be of any object type, which can be converted to string using java.lang.String.valueOf()
 	 * 
 	 * @param fieldName solr field to target the search on
-	 * @param from start range (inclusive), if null all values <= end will be returned
-	 * @param to end range clause (inclusive), if null all values >= start will be returned
+	 * @param from start range (inclusive), if null all values &lt;= end will be returned
+	 * @param to end range clause (inclusive), if null all values &gt;= start will be returned
 	 * @throws IllegalArgumentException on bad field name, or if both from and to are null
 	 */
 	public RangeQueryFilter(String fieldName, Object from, Object to) throws IllegalArgumentException{

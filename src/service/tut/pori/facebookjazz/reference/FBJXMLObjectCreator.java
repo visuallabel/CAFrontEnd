@@ -454,7 +454,7 @@ public class FBJXMLObjectCreator {
 	/**
 	 * 
 	 * @param count
-	 * @return list of comment or null if count was < 1
+	 * @return list of comment or null if count was &lt; 1
 	 */
 	public List<FacebookComment> createFacebookComments(int count){
 		if(count < 1){

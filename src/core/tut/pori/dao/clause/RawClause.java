@@ -16,10 +16,10 @@
 package core.tut.pori.dao.clause;
 
 /**
- * Create a raw sql WhereClause, the insertable sql string (such as COLUMN=? or COLUMN<9) can be added manually.
+ * <p>Create a raw sql WhereClause, the insertable sql string (such as COLUMN=? or COLUMN&lt;9) can be added manually.</p>
  * 
- * This class can be used to create SQL WHERE clauses not supported by the built-in WhereClause implementations,
- * without the need to implement a new WhereClause class.
+ * <p>This class can be used to create SQL WHERE clauses not supported by the built-in WhereClause implementations,
+ * without the need to implement a new WhereClause class.</p>
  *
  */
 public class RawClause extends WhereClause{

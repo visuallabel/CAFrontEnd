@@ -182,9 +182,9 @@ public class MediaObjectList extends ResponseData{
 	}
 
 	/**
-	 * Parse given keywords given in following format: 
-	 * keyword:confidence:backendId,keyword:confidence:backendId,...<br/>
-	 * <em>keyword</em> is required, <em>confidence</em> and <em>backendId</em> are optional.
+	 * <p>Parse given keywords given in following format:</p> 
+	 * <pre>keyword:confidence:backendId,keyword:confidence:backendId,...</pre>
+	 * <p><em>keyword</em> is required, <em>confidence</em> and <em>backendId</em> are optional.</p>
 	 * @param keywords
 	 * @return list of media objects based on the keywords or null if none was found
 	 */

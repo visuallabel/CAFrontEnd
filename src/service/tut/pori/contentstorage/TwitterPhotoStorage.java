@@ -266,10 +266,10 @@ public final class TwitterPhotoStorage extends ContentStorage {
 	 * Note that if screenNames are given, the synchronization is targeted ONLY to the given screen names. If screenNames are NOT given, the synchronization is targeted to ALL content.
 	 * An example use case:
 	 * <ul>
-	 *  <li>User synchronized his/her account with screenName </i>name1</i>, which in this case is also the name of the user's own Twitter account</li>
-	 *  <li>Then, the user re-syncs with different name, <i>name2</i>. The previously used content is left as it is, because the name </i>name1</i> is not given.</li>
+	 *  <li>User synchronized his/her account with screenName <i>name1</i>, which in this case is also the name of the user's own Twitter account</li>
+	 *  <li>Then, the user re-syncs with different name, <i>name2</i>. The previously used content is left as it is, because the name <i>name1</i> is not given.</li>
 	 *  <li>Now, re-syncing with the name <i>name1</i> will ignore all content previously synced with <i>name2</i>, and only synchronize <i>name1</i>. Likewise, using <i>name2</i> would only sync <i>name2</i>, and ignore all content for <i>name1</i>.</li>
-	 *  <li>Re-syncing with both <i>name1</i> and <i>name2</> would retrieve content for both accounts.</li>
+	 *  <li>Re-syncing with both <i>name1</i> and <i>name2</i> would retrieve content for both accounts.</li>
 	 *  <li>Re-syncing without screenNames will default the retrieval to user's own account name (<i>name1</i>), but synchronize ALL content. In practice this means, that the content for <i>name1</i> will be synchronized, and all content for <i>name2</i> will be removed.</li>
 	 * </ul>
 	 * 

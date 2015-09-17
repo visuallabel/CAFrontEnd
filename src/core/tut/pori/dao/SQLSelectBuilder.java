@@ -155,7 +155,7 @@ public class SQLSelectBuilder {
 	/**
 	 * 
 	 * @param template to use for retrieval
-	 * @return record count for the given sql query or < 0 on error
+	 * @return record count for the given sql query or &lt; 0 on error
 	 */
 	public long getRecordCount(JdbcTemplate template){
 		return getRecordCount(template, null);	

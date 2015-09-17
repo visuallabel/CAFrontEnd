@@ -62,7 +62,7 @@ public final class Definitions {
 	public static final String METHOD_PUT = "PUT";
 	
 	/* headers */
-	/** HTTP WWW-authenticate header (<a href="http://tools.ietf.org/html/rfc2617#section-3.2.1*>WWW-Authenticate header</a>)*/
+	/** HTTP WWW-authenticate header (<a href="http://tools.ietf.org/html/rfc2617#section-3.2.1">WWW-Authenticate header</a>)*/
 	public static final String HEADER_AUTHENTICATE = "WWW-Authenticate";
 	/** 
 	 * Default HTTP authenticate realm for basic auth 

@@ -209,7 +209,7 @@ public class ClientService {
 	 * 
 	 * <h2>Example Query:</h2>
 	 *
-	 * GET /rest/{@value service.tut.pori.contentanalysis.reference.Definitions#SERVICE_CA_REFERENCE_CLIENT}/{@value service.tut.pori.contentanalysis.Definitions#METHOD_REDIRECT}?{@value service.tut.pori.contentanalysis.Definitions#PARAMETER_GUID}=1&{@value service.tut.pori.contentanalysis.Definitions#PARAMETER_SERVICE_ID}=1<br>
+	 * GET /rest/{@value service.tut.pori.contentanalysis.reference.Definitions#SERVICE_CA_REFERENCE_CLIENT}/{@value service.tut.pori.contentanalysis.Definitions#METHOD_REDIRECT}?{@value service.tut.pori.contentanalysis.Definitions#PARAMETER_GUID}=1&amp;{@value service.tut.pori.contentanalysis.Definitions#PARAMETER_SERVICE_ID}=1
 	 *
 	 * <h2>Example Result:</h2>
 	 * 

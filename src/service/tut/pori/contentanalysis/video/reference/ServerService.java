@@ -93,7 +93,7 @@ public class ServerService {
 	 * 
 	 * <h2>Example Query:</h2>
 	 *
-	 * GET /rest/{@value service.tut.pori.contentanalysis.video.reference.Definitions#SERVICE_VCA_REFERENCE_SERVER}/{@value service.tut.pori.contentanalysis.Definitions#METHOD_QUERY_TASK_DETAILS}?{@value service.tut.pori.contentanalysis.Definitions#PARAMETER_TASK_ID}=1&{@value service.tut.pori.contentanalysis.Definitions#PARAMETER_BACKEND_ID}=1<br>
+	 * GET /rest/{@value service.tut.pori.contentanalysis.video.reference.Definitions#SERVICE_VCA_REFERENCE_SERVER}/{@value service.tut.pori.contentanalysis.Definitions#METHOD_QUERY_TASK_DETAILS}?{@value service.tut.pori.contentanalysis.Definitions#PARAMETER_TASK_ID}=1&amp;{@value service.tut.pori.contentanalysis.Definitions#PARAMETER_BACKEND_ID}=1<br>
 	 *
 	 * <h2>Example Result:</h2>
 	 * 

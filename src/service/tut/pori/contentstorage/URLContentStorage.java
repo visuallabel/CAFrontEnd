@@ -53,9 +53,9 @@ import core.tut.pori.utils.MediaUrlValidator.MediaType;
 import core.tut.pori.utils.UserIdentityLock;
 
 /**
- * Storage handler that supports saving arbitrary URLs to for the analysis. 
- * The URLs must be of valid image content. ImageValidator is used for performing a simple content check.<br/>
- * This storage service does not split tasks into smaller chunks like the other content storage services.
+ * <p>Storage handler that supports saving arbitrary URLs to for the analysis. 
+ * The URLs must be of valid image content. ImageValidator is used for performing a simple content check.</p>
+ * <p>This storage service does not split tasks into smaller chunks like the other content storage services.</p>
  */
 public final class URLContentStorage extends ContentStorage {
 	/** Service type declaration for this storage */

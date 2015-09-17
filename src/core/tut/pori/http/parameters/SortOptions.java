@@ -31,19 +31,19 @@ import core.tut.pori.http.Definitions;
 
 
 /**
- * The default parser for sort options.
+ * <p>The default parser for sort options.</p>
  * 
- * The basic syntax is: ?PARAMETER=OrderDirection, e.g. ?sort=<
+ * <p>The basic syntax is: ?PARAMETER=OrderDirection, e.g. ?sort=&lt;</p>
  * 
- * It is also possible to give type specific order clauses, e.g. ?sort=TYPE1;<,TYPE2;>
+ * <p>It is also possible to give type specific order clauses, e.g. ?sort=TYPE1;&lt;,TYPE2;&gt;</p>
  * 
- * Also, you can provide specific element name, e.g. ?sort=<ELEMENT_NAME or ?sort=TYPE1;>ELEMENT_NAME
+ * <p>Also, you can provide specific element name, e.g. ?sort=&lt;ELEMENT_NAME or ?sort=TYPE1;&gt;ELEMENT_NAME</p>
  * 
- * These to variations can be combined, e.g. ?sort=<,TYPE;> to provide different sort option for a specific type
+ * <p>These to variations can be combined, e.g. ?sort=&lt;,TYPE;&gt; to provide different sort option for a specific type</p>
  * 
- * Note: the parses has no way of knowing if the given TYPE or ELEMENT_NAME value is valid, you should check the values yourself
+ * <p>Note: the parses has no way of knowing if the given TYPE or ELEMENT_NAME value is valid, you should check the values yourself</p>
  *
- * Any number of sort clauses (SortOption) can be given, and they will be processed in-order by the default SQL and SOLR query builders.
+ * <p>Any number of sort clauses (SortOption) can be given, and they will be processed in-order by the default SQL and SOLR query builders.</p>
  */
 public final class SortOptions extends HTTPParameter{
 	/** String for ascending sort */

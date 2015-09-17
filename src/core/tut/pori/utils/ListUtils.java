@@ -40,7 +40,7 @@ public final class ListUtils {
 	 * 
 	 * @param n
 	 * @param cls
-	 * @return new list or null if n < 1 or cls == null
+	 * @return new list or null if n &lt; 1 or cls == null
 	 * @throws IllegalArgumentException if the classes cannot be instantiated
 	 */
 	public static <T> List<T> createList(int n, Class<T> cls){

@@ -88,30 +88,32 @@ public final class SubtitlesCore {
 		 * media objects will appear grouped by timecodes, combined in a single line 
 		 * 
 		 * An example in <a href="http://dev.w3.org/html5/webvtt">WEBVTT</a> format:
-		 * 
-		 * 00:44.000 --> 01:19.000
+		 * <pre>
+		 * 00:44.000 --&gt; 01:19.000
 		 * Keyword1, Keyword2
 		 *
-		 * 01:24.000 --> 05:00.000
+		 * 01:24.000 --&gt; 05:00.000
 		 * Keyword1, Keyword3
+		 * </pre>
 		 */
 		GROUPED,
 		/** 
 		 * media objects will appear in individual lines, with one timecode sequence per media object 
 		 * 
 		 * An example in <a href="http://dev.w3.org/html5/webvtt">WEBVTT</a> format:
-		 * 
-		 * 00:44.000 --> 01:19.000
+		 * <pre>
+		 * 00:44.000 --&gt; 01:19.000
 		 * Keyword1
 		 *
-		 * 00:44.000 --> 01:19.000
+		 * 00:44.000 --&gt; 01:19.000
 		 * Keyword2
 		 *
-		 * 01:24.000 --> 05:00.000
+		 * 01:24.000 --&gt; 05:00.000
 		 * Keyword1
 		 * 
-		 * 01:24.000 --> 05:00.000
+		 * 01:24.000 --&gt; 05:00.000
 		 * Keyword3
+		 * </pre>
 		 */
 		INDIVIDUAL;
 		

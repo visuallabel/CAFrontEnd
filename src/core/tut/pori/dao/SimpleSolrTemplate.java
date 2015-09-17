@@ -81,7 +81,7 @@ public class SimpleSolrTemplate{
 	 * @param ids
 	 * @return response
 	 * @throws SolrException
-	 * @see org.apache.solr.client.solrj.SolrServer#deleteById(java.util.List)
+	 * @see org.apache.solr.client.solrj.SolrClient#deleteById(java.util.List)
 	 */
 	public UpdateResponse deleteById(List<String> ids) throws SolrException {
 		try {
@@ -123,7 +123,7 @@ public class SimpleSolrTemplate{
 	 * @param params
 	 * @return response
 	 * @throws SolrException
-	 * @see org.apache.solr.client.solrj.SolrServer#query(org.apache.solr.common.params.SolrParams)
+	 * @see org.apache.solr.client.solrj.SolrClient#query(org.apache.solr.common.params.SolrParams)
 	 */
 	public QueryResponse query(SolrParams params) throws SolrException {
 		try {
