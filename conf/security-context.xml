@@ -21,13 +21,15 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
-	<http use-expressions="false">
+	<http use-expressions="false" auto-config="false">
 		<!-- we do not generate CSRF tokens, so disable the protection allow DELETE, POST, PUT -->
 		<csrf disabled="true"/>
 	    <intercept-url pattern="/**" access="ROLE_ANONYMOUS, ROLE_USER,ROLE_ADMIN, ROLE_BACKEND"/>
 		<http-basic />
 		<custom-filter ref="ipAuthenticationFilter" after="BASIC_AUTH_FILTER"/>
-		<session-management session-authentication-strategy-ref="sas"/>
+		<!-- Disable the default filter -->
+		<session-management session-fixation-protection="none"/>
+		<custom-filter ref="sessionManagementFilter" position="SESSION_MANAGEMENT_FILTER" />
 	</http>
 	
  	<!-- IP Pre-Authentication -->
@@ -59,6 +61,13 @@
 	<beans:bean name="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 	
 	<!-- Session management -->
+	
+	<beans:bean id="sessionManagementFilter" class="org.springframework.security.web.session.SessionManagementFilter">
+		<beans:constructor-arg name="securityContextRepository" ref="httpSessionSecurityContextRepository"/>
+		<beans:constructor-arg name="sessionStrategy" ref="sas"/>
+	</beans:bean>
+	
+	<beans:bean id="httpSessionSecurityContextRepository" class="org.springframework.security.web.context.HttpSessionSecurityContextRepository"/>
 	
 	<beans:bean id="sas" class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
   		<beans:constructor-arg name="sessionRegistry" ref="sessionRegistry" />
