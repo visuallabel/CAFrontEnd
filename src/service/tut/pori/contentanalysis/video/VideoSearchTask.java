@@ -141,6 +141,10 @@ public class VideoSearchTask{
 			}
 		}
 		
+		if(!StringUtils.isBlank(_guid)){ // if search target is given, make sure it does not appear in the results
+			guids.remove(_guid);
+		}
+		
 		VideoList results = ServiceInitializer.getDAOHandler().getSolrDAO(VideoDAO.class).search(authenticatedUser, dataGroups, guids, limits, null, null, null); // the back-ends are not guaranteed to return results the user has permissions to view, so re-search everything just in case
 		if(VideoList.isEmpty(results)){
 			LOGGER.debug("No videos found.");
