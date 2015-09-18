@@ -20,8 +20,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -42,11 +42,11 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 import service.tut.pori.contentanalysis.AnalysisBackend;
-import service.tut.pori.contentanalysis.Definitions;
 import service.tut.pori.contentanalysis.AnalysisBackend.Capability;
-import service.tut.pori.contentanalysis.PhotoParameters.AnalysisType;
 import service.tut.pori.contentanalysis.BackendDAO;
 import service.tut.pori.contentanalysis.CAContentCore.ServiceType;
+import service.tut.pori.contentanalysis.Definitions;
+import service.tut.pori.contentanalysis.PhotoParameters.AnalysisType;
 import core.tut.pori.context.ServiceInitializer;
 import core.tut.pori.http.Response;
 import core.tut.pori.http.parameters.DataGroups;
@@ -134,17 +134,30 @@ public class VideoSearchTask{
 		if(videoLists == null || videoLists.isEmpty()){
 			return null;
 		}
-		Set<String> guids = new HashSet<>();
-		for(VideoList videoList : videoLists){	// collect all unique GUIDs
+		Set<String> guids = new LinkedHashSet<>();
+		for(VideoList videoList : videoLists){	// collect all unique GUIDs. Note: this will prioritize the FASTER back-end, and does not guarantee that MORE APPLICABLE results appear first. This is because we have no easy (defined) way to decide which results are better than others.
 			for(Video video : videoList.getVideos()){
 				guids.add(video.getGUID());
 			}
 		}
-		VideoList l = ServiceInitializer.getDAOHandler().getSolrDAO(VideoDAO.class).search(authenticatedUser, dataGroups, guids, limits, null, null, null); // the back-ends are not guaranteed to return results the user has permissions to view, so re-search everything just in case
-		if(VideoList.isEmpty(l)){
+		
+		VideoList results = ServiceInitializer.getDAOHandler().getSolrDAO(VideoDAO.class).search(authenticatedUser, dataGroups, guids, limits, null, null, null); // the back-ends are not guaranteed to return results the user has permissions to view, so re-search everything just in case
+		if(VideoList.isEmpty(results)){
 			LOGGER.debug("No videos found.");
+			return null;
 		}
-		return l;
+		
+		List<Video> sorted = new ArrayList<>(guids.size());
+		for(String guid : guids){ // sort the results back to the original order
+			Video video = results.getVideo(guid);
+			if(video == null){
+				LOGGER.warn("Ignored video with non-existing GUID: "+guid);
+			}else{
+				sorted.add(video);
+			}
+		}
+		results.setVideos(sorted);
+		return results;
 	}
 	
 	/**

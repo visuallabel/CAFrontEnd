@@ -20,8 +20,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -43,8 +43,8 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 import service.tut.pori.contentanalysis.AnalysisBackend.Capability;
-import service.tut.pori.contentanalysis.PhotoParameters.AnalysisType;
 import service.tut.pori.contentanalysis.CAContentCore.ServiceType;
+import service.tut.pori.contentanalysis.PhotoParameters.AnalysisType;
 import core.tut.pori.context.ServiceInitializer;
 import core.tut.pori.http.Response;
 import core.tut.pori.http.parameters.DataGroups;
@@ -134,17 +134,30 @@ public class PhotoSearchTask{
 		if(photoLists == null || photoLists.isEmpty()){
 			return null;
 		}
-		Set<String> guids = new HashSet<>();
-		for(PhotoList photoList : photoLists){	// collect all unique GUIDs
+		Set<String> guids = new LinkedHashSet<>();
+		for(PhotoList photoList : photoLists){	// collect all unique GUIDs. Note: this will prioritize the FASTER back-end, and does not guarantee that MORE APPLICABLE results appear first. This is because we have no easy (defined) way to decide which results are better than others.
 			for(Photo photo : photoList.getPhotos()){
 				guids.add(photo.getGUID());
 			}
 		}
-		PhotoList l = ServiceInitializer.getDAOHandler().getSolrDAO(PhotoDAO.class).search(authenticatedUser, dataGroups, guids, limits, null, null, null); // the back-ends are not guaranteed to return results the user has permissions to view, so re-search everything just in case
-		if(PhotoList.isEmpty(l)){
+		
+		PhotoList results = ServiceInitializer.getDAOHandler().getSolrDAO(PhotoDAO.class).search(authenticatedUser, dataGroups, guids, limits, null, null, null); // the back-ends are not guaranteed to return results the user has permissions to view, so re-search everything just in case
+		if(PhotoList.isEmpty(results)){
 			LOGGER.debug("No photos found.");
+			return null;
 		}
-		return l;
+		
+		List<Photo> sorted = new ArrayList<>(guids.size());
+		for(String guid : guids){ // sort the results back to the original order
+			Photo photo = results.getPhoto(guid);
+			if(photo == null){
+				LOGGER.warn("Ignored photo with non-existing GUID: "+guid);
+			}else{
+				sorted.add(photo);
+			}
+		}
+		results.setPhotos(sorted);
+		return results;
 	}
 	
 	/**
