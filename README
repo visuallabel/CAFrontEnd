@@ -1,5 +1,7 @@
 Rename the build.properties.orig to build.properties. All required .jar files
-are in the lib directory.
+are in the lib directory, EXCEPT websocket-api.jar and servlet-api.jar, which
+you must copy from your tomcat installation, or be sure that they are otherwi$
+present in the classpath.
 
 Importing the source code as existing ant project to eclipse will probably not
 work. It is better to create a new java project and select the project directory
