@@ -10,3 +10,6 @@ variables manually.
 
 Modify build.properties and *.properties files in /conf to enable your preferred
 services.
+
+See the wiki https://github.com/visuallabel/CAFrontEnd/wiki/Deployment-Guide for
+more information for the deployment process.
