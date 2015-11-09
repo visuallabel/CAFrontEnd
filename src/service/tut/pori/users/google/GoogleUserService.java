@@ -15,7 +15,6 @@
  */
 package service.tut.pori.users.google;
 
-import service.tut.pori.users.Definitions;
 import core.tut.pori.http.Response;
 import core.tut.pori.http.Response.Status;
 import core.tut.pori.http.annotations.HTTPAuthenticationParameter;
@@ -100,7 +99,7 @@ public class GoogleUserService {
 	 * @param accessToken OAuth2 access token as provided by Google.
 	 * @return response
 	 */
-	@HTTPServiceMethod(name=Definitions.METHOD_REGISTER)
+	@HTTPServiceMethod(name=service.tut.pori.users.Definitions.METHOD_REGISTER)
 	public Response register(@HTTPMethodParameter(name=Definitions.PARAMETER_OAUTH2_ACCESS_TOKEN) StringParameter accessToken)
 	{
 		return GoogleUserCore.register(accessToken.getValue());

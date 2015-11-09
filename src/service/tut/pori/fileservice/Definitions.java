@@ -55,4 +55,7 @@ public final class Definitions {
 	public static final String PARAMETER_FILE_ID = "file_id";
 	/** method parameter declaration */
 	public static final String PARAMETER_FILE_NAME = "filename";
+
+	/** property file for the service */
+	protected static final String PROPERTY_FILE = "fs.properties";
 }

@@ -307,6 +307,9 @@ public final class Definitions {
 	protected static final String SOLR_FIELD_VISUAL_SHAPE_TYPE = ELEMENT_VISUAL_SHAPE_TYPE+SOLR_INTEGER;
 	/** SOLR field declaration */
 	protected static final String SOLR_FIELD_VISUAL_SHAPE_VALUE = ELEMENT_VISUAL_SHAPE+SOLR_STRING;
+
+	/** property file for the service */
+	protected static final String PROPERTY_FILE = "ca.properties";
 	
 	/**
 	 * 

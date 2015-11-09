@@ -43,7 +43,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
-import service.tut.pori.users.Definitions;
 import service.tut.pori.users.UserCore;
 import service.tut.pori.users.UserCore.Registration;
 import service.tut.pori.users.UserCore.RegistrationStatus;

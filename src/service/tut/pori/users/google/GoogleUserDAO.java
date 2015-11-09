@@ -26,7 +26,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 
-import service.tut.pori.users.OAuth2Token;
 import service.tut.pori.users.UserDAO;
 import core.tut.pori.dao.clause.SQLClause.SQLType;
 import core.tut.pori.dao.SQLDAO;

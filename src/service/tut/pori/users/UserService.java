@@ -72,7 +72,7 @@ public class UserService {
 	 * This method can be used to retrieve all external account connections known by the system for the authenticated user.
 	 * 
 	 * @param authenticatedUser
-	 * @param serviceTypes optional service type filter
+	 * @param serviceTypes optional service type filter {@link core.tut.pori.users.ExternalAccountConnection.UserServiceType}
 	 * @return See {@link service.tut.pori.users.ExternalAccountConnectionList}
 	 */
 	@HTTPServiceMethod(name=Definitions.METHOD_GET_EXTERNAL_ACCOUNT_CONNECTIONS, acceptedMethods={core.tut.pori.http.Definitions.METHOD_GET})
@@ -87,7 +87,7 @@ public class UserService {
 	 * This method can be used to remove external account connection for the authenticated user.
 	 * 
 	 * @param authenticatedUser
-	 * @param serviceTypes the service to remove
+	 * @param serviceTypes the service to remove {@link core.tut.pori.users.ExternalAccountConnection.UserServiceType}
 	 */
 	@HTTPServiceMethod(name=Definitions.METHOD_DELETE_EXTERNAL_ACCOUNT_CONNECTION, acceptedMethods = {core.tut.pori.http.Definitions.METHOD_DELETE})
 	public void deleteExternalAccountConnection(

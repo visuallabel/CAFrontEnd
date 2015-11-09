@@ -40,7 +40,11 @@ import service.tut.pori.contentanalysis.MediaObjectDAO;
 import service.tut.pori.contentanalysis.MediaObjectList;
 import service.tut.pori.contentanalysis.PhotoDAO;
 import service.tut.pori.twitterjazz.TwitterExtractor.ContentType;
+import service.tut.pori.users.twitter.TwitterProperties;
 import service.tut.pori.users.twitter.TwitterUserCore;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 import core.tut.pori.context.ServiceInitializer;
 import core.tut.pori.http.parameters.DataGroups;
 import core.tut.pori.http.parameters.Limits;
@@ -61,6 +65,7 @@ public final class TJContentCore {
 	private static final String JOB_KEY_USER_ID = "userId";
 	private static final EnumSet<MediaType> MEDIA_TYPES_TJ = EnumSet.allOf(MediaType.class);
 	private static final EnumSet<ServiceType> SERVICE_TYPES_TJ = EnumSet.of(ServiceType.TWITTER_JAZZ);
+	private static TwitterFactory TWITTER_FACTORY = null;
 	
 	/**
 	 * 
@@ -213,6 +218,37 @@ public final class TJContentCore {
 		if(!ServiceInitializer.getDAOHandler().getSolrDAO(PhotoDAO.class).update(rankedObjects)){
 			LOGGER.warn("Failed to update media objects.");
 		}
+	}
+	
+	/**
+	 * 
+	 * @return thread-safe factory instance for the twitter properties
+	 */
+	protected static TwitterFactory getTwitterFactory(){
+		TwitterFactory _factory = TWITTER_FACTORY;
+		if(_factory == null){
+			synchronized (TwitterExtractor.class) {
+				if(TWITTER_FACTORY != null){
+					_factory = TWITTER_FACTORY;
+				}else{
+					TwitterProperties tp = ServiceInitializer.getPropertyHandler().getSystemProperties(TwitterProperties.class);
+					LOGGER.debug("Initializing a new twitter factory...");
+					boolean debug = tp.isDebugEnabled();
+					if(debug){
+						LOGGER.debug("Debug enabled.");
+					}
+					
+					Configuration configuration = new ConfigurationBuilder()
+					.setDebugEnabled(debug)
+					.setIncludeEntitiesEnabled(true)
+					.setOAuthConsumerKey(tp.getApiKey())
+					.setOAuthConsumerSecret(tp.getClientSecret())
+					.build();
+					_factory = TWITTER_FACTORY = new TwitterFactory(configuration);
+				}
+			} // synchronized
+		} // if
+		return _factory;
 	}
 
 	/**

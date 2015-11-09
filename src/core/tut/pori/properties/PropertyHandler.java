@@ -90,6 +90,9 @@ public final class PropertyHandler {
 					LOGGER.debug("Found property with custom file path.");
 					Properties customProperties = new Properties();
 					try (InputStream customStream = classLoader.getResourceAsStream(propertyFilePath)) {
+						if(customStream == null){
+							throw new IllegalArgumentException("Failed to load custom property file: "+propertyFilePath+", for "+property.getClass().toString());
+						}
 						customProperties.load(customStream);
 						property.initialize(customProperties);
 					}

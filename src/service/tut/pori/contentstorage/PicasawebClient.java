@@ -46,7 +46,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import service.tut.pori.users.OAuth2Token;
+import service.tut.pori.users.google.OAuth2Token;
 import service.tut.pori.users.google.GoogleCredential;
 import service.tut.pori.users.google.GoogleUserCore;
 import core.tut.pori.users.UserIdentity;

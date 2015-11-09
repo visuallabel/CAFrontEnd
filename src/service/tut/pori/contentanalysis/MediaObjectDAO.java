@@ -66,8 +66,6 @@ import core.tut.pori.utils.MediaUrlValidator.MediaType;
  *
  */
 public class MediaObjectDAO extends SolrDAO{
-	/** Default media object type for search operations, when object type is not specified */
-	public static final MediaObjectType DEFAULT_MEDIA_OBJECT_TYPE = MediaObjectType.KEYWORD;
 	private static final String BEAN_ID_SOLR_SERVER = "solrServerMediaObjects";
 	private static final int[] DEFAULT_CONFIRMATION_STATUS_LIST = ConfirmationStatus.toIntArray(EnumSet.of(ConfirmationStatus.CANDIDATE, ConfirmationStatus.USER_CONFIRMED));
 	private static final SortOptions DEFAULT_SORT_OPTIONS;
@@ -538,15 +536,13 @@ public class MediaObjectDAO extends SolrDAO{
 					}
 				}
 				
-				MediaObjectType type = term.getMediaObjectType();
-				if(type == null){
-					LOGGER.warn("No media object type, using default : "+DEFAULT_MEDIA_OBJECT_TYPE.name());
-					type = DEFAULT_MEDIA_OBJECT_TYPE;
-				}
 				OrSubQueryFilter subFilter = new OrSubQueryFilter();
-				
 				subFilter.addFilter(new AndQueryFilter(Definitions.SOLR_FIELD_VALUE_SEARCH, value));
-				subFilter.addFilter(new AndQueryFilter(Definitions.SOLR_FIELD_MEDIA_OBJECT_TYPE, type.toInt()));
+				
+				MediaObjectType type = term.getMediaObjectType();
+				if(type != null){
+					subFilter.addFilter(new AndQueryFilter(Definitions.SOLR_FIELD_MEDIA_OBJECT_TYPE, type.toInt()));
+				}
 				
 				Visibility visibility = term.getVisibility();
 				if(visibility != null){

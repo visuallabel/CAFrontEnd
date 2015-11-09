@@ -23,10 +23,6 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import service.tut.pori.twitterjazz.TwitterExtractor;
-import twitter4j.TwitterFactory;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
 import core.tut.pori.properties.SystemProperty;
 
 /**
@@ -56,7 +52,6 @@ public class TwitterProperties extends SystemProperty {
 	private String _oAuthLoginRedirectUri = null;
 	private String _oAuthRegisterRedirectUri = null;
 	private String _oAuthUri = null;
-	private TwitterFactory _twitterFactory = null;
 	private String _userInfoUri = null;
 
 	@Override
@@ -183,34 +178,8 @@ public class TwitterProperties extends SystemProperty {
 		return _encodedClientSecret;
 	}
 	
-	/**
-	 * 
-	 * @return thread-safe factory instance for the twitter properties
-	 */
-	public TwitterFactory getTwitterFactory(){
-		TwitterFactory _factory = _twitterFactory;
-		if(_factory == null){
-			synchronized (TwitterExtractor.class) {
-				if(_twitterFactory != null){
-					_factory = _twitterFactory;
-				}else{
-					Logger logger = Logger.getLogger(TwitterProperties.class);
-					logger.debug("Initializing a new twitter factory...");
-					boolean debug = isDebugEnabled();
-					if(debug){
-						logger.debug("Debug enabled.");
-					}
-					
-					Configuration configuration = new ConfigurationBuilder()
-					.setDebugEnabled(debug)
-					.setIncludeEntitiesEnabled(true)
-					.setOAuthConsumerKey(_apiKey)
-					.setOAuthConsumerSecret(_clientSecret)
-					.build();
-					_factory = _twitterFactory = new TwitterFactory(configuration);
-				}
-			} // synchronized
-		} // if
-		return _factory;
+	@Override
+	public String getPropertyFilePath() {
+		return CONFIGURATION_FILE_PATH+"twitter.properties";
 	}
 }

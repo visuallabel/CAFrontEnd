@@ -29,12 +29,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
-import service.tut.pori.users.Definitions;
-import service.tut.pori.users.OAuth2Token;
 import service.tut.pori.users.UserCore;
 import service.tut.pori.users.UserCore.Registration;
 import service.tut.pori.users.UserCore.RegistrationStatus;
 import service.tut.pori.users.UserServiceEvent;
+import service.tut.pori.users.google.OAuth2Token;
 import core.tut.pori.context.ServiceInitializer;
 import core.tut.pori.http.RedirectResponse;
 import core.tut.pori.http.Response;

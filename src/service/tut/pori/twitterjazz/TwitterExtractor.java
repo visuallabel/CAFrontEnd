@@ -27,15 +27,14 @@ import org.apache.http.client.utils.DateUtils;
 import org.apache.log4j.Logger;
 
 import service.tut.pori.contentanalysis.Definitions;
+import service.tut.pori.contentanalysis.MediaObject;
+import service.tut.pori.contentanalysis.MediaObjectList;
 import service.tut.pori.contentanalysis.Photo;
 import service.tut.pori.contentanalysis.PhotoDAO;
 import service.tut.pori.contentanalysis.PhotoList;
-import service.tut.pori.contentanalysis.MediaObject;
-import service.tut.pori.contentanalysis.MediaObjectList;
 import service.tut.pori.contentstorage.TwitterDAO;
 import service.tut.pori.contentstorage.TwitterPhotoStorage;
 import service.tut.pori.contentstorage.TwitterPhotoStorage.TwitterEntry;
-import service.tut.pori.users.twitter.TwitterProperties;
 import service.tut.pori.users.twitter.TwitterUserDAO;
 import twitter4j.Paging;
 import twitter4j.ResponseList;
@@ -119,7 +118,7 @@ public class TwitterExtractor {
 			return null;
 		}
 		extractor = new TwitterExtractor(userId);
-		extractor._twitter = ServiceInitializer.getPropertyHandler().getSystemProperties(TwitterProperties.class).getTwitterFactory().getInstance(token);
+		extractor._twitter = TJContentCore.getTwitterFactory().getInstance(token);
 		return extractor;
 	}
 

@@ -104,4 +104,9 @@ public class CAProperties extends SystemProperty {
 	public long getScheduleTaskDelay() {
 		return _scheduleTaskDelay;
 	}
+	
+	@Override
+	public String getPropertyFilePath() {
+		return CONFIGURATION_FILE_PATH+Definitions.PROPERTY_FILE;
+	}
 }

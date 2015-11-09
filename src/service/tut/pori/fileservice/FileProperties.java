@@ -53,4 +53,9 @@ public class FileProperties extends SystemProperty {
 	public String getUriPath() {
 		return _uriPath;
 	}
+	
+	@Override
+	public String getPropertyFilePath() {
+		return CONFIGURATION_FILE_PATH+Definitions.PROPERTY_FILE;
+	}
 }

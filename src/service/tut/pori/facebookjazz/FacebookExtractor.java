@@ -33,7 +33,7 @@ import service.tut.pori.contentstorage.FacebookDAO;
 import service.tut.pori.contentstorage.FacebookPhotoStorage;
 import service.tut.pori.contentstorage.FacebookPhotoStorage.FacebookEntry;
 import service.tut.pori.facebookjazz.WeightModifier.WeightModifierType;
-import service.tut.pori.users.OAuth2Token;
+import service.tut.pori.users.google.OAuth2Token;
 import service.tut.pori.users.facebook.FacebookUserDAO;
 
 import com.restfb.Connection;

@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +65,7 @@ import service.tut.pori.fuzzyvisuals.FuzzyAnalyzer;
 import service.tut.pori.twitterjazz.TwitterExtractor;
 import service.tut.pori.twitterjazz.TwitterExtractor.ContentType;
 import service.tut.pori.twitterjazz.TwitterProfile;
-import service.tut.pori.users.OAuth2Token;
+import service.tut.pori.users.google.OAuth2Token;
 import service.tut.pori.users.google.GoogleCredential;
 import service.tut.pori.users.google.GoogleUserCore;
 import core.tut.pori.context.ServiceInitializer;
@@ -506,6 +508,20 @@ public final class ContentAnalysisTestUtils {
 				pa.setGUIDs(GUIDs);
 			}
 			albums.add(pa);
+		}
+		
+		if(albums.isEmpty()){
+			LOGGER.warn("No albums resolved.");
+			return null;
+		}
+		
+		if(resolveNames){
+			Collections.sort(albums, new Comparator<PicasaAlbum>() {
+				@Override
+				public int compare(PicasaAlbum a1, PicasaAlbum a2) {
+					return a1.getName().compareTo(a2.getName());
+				}
+			});
 		}
 
 		PicasaAlbumList albumList = new PicasaAlbumList();

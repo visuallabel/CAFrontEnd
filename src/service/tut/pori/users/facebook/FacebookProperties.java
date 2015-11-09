@@ -138,4 +138,9 @@ public class FacebookProperties extends SystemProperty{
 	public String getoAuth2UserInfoUri() {
 		return _oAuth2UserInfoUri;
 	}
+	
+	@Override
+	public String getPropertyFilePath() {
+		return CONFIGURATION_FILE_PATH+"facebook.properties";
+	}
 }

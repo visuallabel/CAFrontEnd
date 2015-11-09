@@ -33,13 +33,11 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
-import service.tut.pori.users.Definitions;
-import service.tut.pori.users.Definitions.OAuth2GrantType;
-import service.tut.pori.users.OAuth2Token;
 import service.tut.pori.users.UserCore;
 import service.tut.pori.users.UserCore.Registration;
 import service.tut.pori.users.UserCore.RegistrationStatus;
 import service.tut.pori.users.UserServiceEvent;
+import service.tut.pori.users.google.Definitions.OAuth2GrantType;
 import core.tut.pori.context.ServiceInitializer;
 import core.tut.pori.http.RedirectResponse;
 import core.tut.pori.http.Response;
