@@ -179,7 +179,7 @@ public class QueryParameter extends HTTPParameter{
 	@Override
 	public void initialize(InputStream parameterValue) throws IllegalArgumentException {
 		try {
-			initialize(IOUtils.toString(parameterValue));
+			initialize(IOUtils.toString(parameterValue, core.tut.pori.http.Definitions.CHARSET_UTF8));
 		} catch (IOException ex) {
 			LOGGER.error(ex, ex);
 			throw new IllegalArgumentException("Failed to read HTTP body.");

@@ -15,12 +15,22 @@
  */
 package core.tut.pori.dao;
 
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
+
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 
 /**
  * Base class for SQL DAOs.
@@ -29,9 +39,9 @@ import org.springframework.transaction.support.TransactionTemplate;
  * http://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-spring-config-jdbctemplate.html
  * 
  * Subclassing this class will automatically add the new class to DAOHandler, and will be retrievable
- * run-time from ServiceInitializer.getDAOHandler().getSQLDAO(...)
+ * run-time from ServiceInitializer.getDAOHandler().getDAO(...)
  */
-public abstract class SQLDAO {
+public abstract class SQLDAO implements DAO {
 	/* databases */
 	/** default database schema */
 	protected static final String DATABASE = "ca_frontend";
@@ -102,4 +112,36 @@ public abstract class SQLDAO {
 		}
 		return (Long)value;
 	}
+	
+	/**
+	 * Cleans up the SQL driver after context has been closed
+	 *
+	 * Automatically instantiated by Spring as a bean.
+	 */
+	@SuppressWarnings("unused")
+	private static class ContextClosedEventListener implements ApplicationListener<ContextClosedEvent>{
+		private static final Logger LOGGER = Logger.getLogger(ContextClosedEventListener.class);
+		
+		@Override
+		public void onApplicationEvent(ContextClosedEvent event) {
+			LOGGER.debug("Cleaning up SQL connections...");
+			
+			try {
+				AbandonedConnectionCleanupThread.shutdown(); //MySQL specific clean up http://bugs.mysql.com/bug.php?id=65909
+			} catch (InterruptedException ex) {
+				 LOGGER.error(ex, ex);
+			}
+			
+			Enumeration<Driver> drivers = DriverManager.getDrivers();
+	        while (drivers.hasMoreElements()) { // terminate the driver
+	            Driver driver = drivers.nextElement();
+	            try {
+	            	LOGGER.debug("Deregistering SQL driver: "+driver.getClass());
+	                DriverManager.deregisterDriver(driver);
+	            } catch (SQLException ex) {
+	               LOGGER.error(ex, ex);
+	            }
+	        }
+		}
+	} // class ContextClosedEventListener
 }

@@ -15,6 +15,8 @@
  */
 package core.tut.pori.http;
 
+import java.nio.charset.Charset;
+
 
 /**
  * Definitions for the http package.
@@ -88,6 +90,8 @@ public final class Definitions {
 	/* common */
 	/** the default encoding for HTTP traffic */
 	public static final String ENCODING_UTF8 = "UTF-8";
+	/** the default charset for HTTP traffic */
+	public static final Charset CHARSET_UTF8 = Charset.forName("UTF-8");
 	/** HTTP content type for JSON */
 	public static final String CONTENT_TYPE_JSON = "application/json";
 	/** HTTP content type for XML */

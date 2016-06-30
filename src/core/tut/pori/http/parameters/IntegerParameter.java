@@ -80,7 +80,7 @@ public class IntegerParameter extends HTTPParameter {
 	@Override
 	public void initialize(InputStream stream) throws IllegalArgumentException {
 		try {
-			_values = new int[]{Integer.parseInt(IOUtils.toString(stream))};
+			_values = new int[]{Integer.parseInt(IOUtils.toString(stream, core.tut.pori.http.Definitions.CHARSET_UTF8))};
 		} catch (IOException | NumberFormatException ex) {
 			LOGGER.error(ex, ex);
 			throw new IllegalArgumentException("Failed to read HTTP body.");

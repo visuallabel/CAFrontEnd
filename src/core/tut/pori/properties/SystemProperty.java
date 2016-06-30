@@ -23,12 +23,6 @@ import java.util.Properties;
  * All classes sub-classed from this base class will automatically be loaded and initialized by the system property handler.
  */
 public abstract class SystemProperty {
-	/* configuration file path */
-	/** root path for the the configuration files */
-	public static final String CONFIGURATION_FILE_PATH = "../";
-	/** system property file path */
-	protected static final String SYSTEM_PROPERTY_FILE = CONFIGURATION_FILE_PATH+"system.properties";	// the project defaults to WEB-INF/classes, but the properties file is at WEB-INF
-	
 	/* core */
 	/** property prefix for core */
 	protected static final String PROPERTY_CORE_PORI = "core.tut.pori";

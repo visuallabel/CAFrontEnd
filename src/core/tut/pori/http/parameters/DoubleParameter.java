@@ -23,6 +23,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import core.tut.pori.http.Definitions;
+
 /**
  * A simple class for Double parameters
  *
@@ -81,7 +83,7 @@ public class DoubleParameter extends HTTPParameter{
 	@Override
 	public void initialize(InputStream stream) throws IllegalArgumentException {
 		try {
-			_values = new double[]{Double.parseDouble(IOUtils.toString(stream))};
+			_values = new double[]{Double.parseDouble(IOUtils.toString(stream, Definitions.CHARSET_UTF8))};
 		} catch (IOException | NumberFormatException ex) {
 			LOGGER.error(ex, ex);
 			throw new IllegalArgumentException("Failed to read HTTP body.");

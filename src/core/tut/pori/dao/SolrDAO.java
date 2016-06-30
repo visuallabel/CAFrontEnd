@@ -29,10 +29,10 @@ import org.springframework.context.ApplicationContextAware;
  * Base class for SOLR DAOs.
  * 
  * Subclassing this class will automatically add the new class to DAOHandler, and will be retrievable
- * run-time from ServiceInitializer.getDAOHandler().getSolrDAO(...)
+ * run-time from ServiceInitializer.getDAOHandler().getDAO(...)
  *
  */
-public abstract class SolrDAO implements ApplicationContextAware{
+public abstract class SolrDAO implements DAO, ApplicationContextAware{
 	/** Specifies time to wait in milliseconds before invoking "soft commit" for Solr index. */
 	public static final int SOLR_COMMIT_WITHIN = 1000;
 	/** Maximum document count for SOLR queries */

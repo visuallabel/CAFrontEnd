@@ -44,10 +44,6 @@ public final class Definitions {
 	/** local service method declaration */
 	public static final String METHOD_UNREGISTER = "unregister";
 	
-	/* common */
-	/** value coding separator in randomly generated nonce */
-	protected static final String NONCE_SEPARATOR = ".-.";
-	
 	/* parameters */
 	/** method parameter declaration */
 	public static final String PARAMETER_SERVICE_TYPE = "service_type";

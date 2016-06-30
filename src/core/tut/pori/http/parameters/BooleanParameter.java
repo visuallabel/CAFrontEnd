@@ -73,7 +73,7 @@ public class BooleanParameter extends HTTPParameter{
 	
 	/**
 	 * 
-	 * @return true if the value is true, false if value is value or does not exist
+	 * @return true if the value is true, false if value is false or does not exist
 	 */
 	public boolean isTrue(){
 		return (hasValues() ? _values[0] : false);
@@ -95,7 +95,7 @@ public class BooleanParameter extends HTTPParameter{
 	@Override
 	public void initialize(InputStream stream) throws IllegalArgumentException {
 		try {
-			initialize(IOUtils.toString(stream));
+			initialize(IOUtils.toString(stream, core.tut.pori.http.Definitions.CHARSET_UTF8));
 		} catch (IOException ex) {
 			LOGGER.error(ex, ex);
 			throw new IllegalArgumentException("Failed to read HTTP body.");

@@ -40,7 +40,7 @@ import core.tut.pori.utils.StringUtils;
  */
 public class ExecutorHandler {
 	private static final Logger LOGGER = Logger.getLogger(ExecutorHandler.class);
-	private static final String QUARTZ_CONFIGURATION_FILE = "../quartz.properties";
+	private static final String QUARTZ_CONFIGURATION_FILE = "quartz.properties";
 	private static final String QUARTZ_SYSTEM_PROPERTY = "org.quartz.properties";
 	private Scheduler _scheduler = null;
 	private ExecutorService _executor = null;
@@ -73,7 +73,7 @@ public class ExecutorHandler {
 	public ExecutorHandler() throws IllegalArgumentException{
 		LOGGER.debug("Initializing handler...");
 		Date started = new Date();
-		System.setProperty(QUARTZ_SYSTEM_PROPERTY, QUARTZ_CONFIGURATION_FILE);	// load quartz configuration
+		System.setProperty(QUARTZ_SYSTEM_PROPERTY, ServiceInitializer.getConfigHandler().getPropertyFilePath()+QUARTZ_CONFIGURATION_FILE);	// load quartz configuration
 		try {
 			_scheduler  = StdSchedulerFactory.getDefaultScheduler();
 			_scheduler.start();

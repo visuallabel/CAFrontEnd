@@ -57,7 +57,7 @@ public class EventHandler {
 	private void initialize() throws BeansException{
 		LOGGER.debug("Initializing handler...");
 		Date started = new Date();
-		_context = new ClassPathXmlApplicationContext(core.tut.pori.properties.SystemProperty.CONFIGURATION_FILE_PATH+SERVLET_CONFIGURATION_FILE);
+		_context = new ClassPathXmlApplicationContext(ServiceInitializer.getConfigHandler().getConfigFilePath()+SERVLET_CONFIGURATION_FILE);
 
 		LOGGER.debug("Event Handler initialized in "+StringUtils.getDurationString(started, new Date()));
 	}
@@ -99,10 +99,16 @@ public class EventHandler {
 				LOGGER.debug("No listeners for event "+event.getClass().toString());
 				return;
 			}
-			
-			ExecutorService executor = ServiceInitializer.getExecutorHandler().getExecutor();
+			ExecutorHandler handler = ServiceInitializer.getExecutorHandler();
+			if(handler == null){
+				LOGGER.debug("No executor handler available. Ignoring multicast.");
+				syncCast(listeners, event);
+				return;
+			}
+			ExecutorService executor = handler.getExecutor();
 			if(executor == null){
-				LOGGER.warn("No executor available. Ignoring multicast.");
+				LOGGER.debug("No executor available. Ignoring multicast.");
+				syncCast(listeners, event);
 				return;
 			}
 			for(final ApplicationListener listener : listeners){
@@ -119,5 +125,23 @@ public class EventHandler {
 				});
 			}
 		}
+
+		/**
+		 * blocking fallback method for cases when executor is not available
+		 * 
+		 * @param listeners list of listeners applicable for the given event type
+		 * @param event the event to send
+		 */
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		private void syncCast(Collection<ApplicationListener<?>> listeners, ApplicationEvent event) {
+			LOGGER.debug("Using synchronous fallback method for event delivery...");
+			for(ApplicationListener listener : listeners){
+				try {
+					listener.onApplicationEvent(event);
+				} catch (Throwable ex){
+					LOGGER.error(ex, ex);
+				}
+			}
+		}	
 	} //  class EventMulticaster
 }

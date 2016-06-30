@@ -38,7 +38,7 @@ public class IPAuthenticationFilter extends AbstractPreAuthenticatedProcessingFi
 	protected UserIdentity getPreAuthenticatedPrincipal(HttpServletRequest request) {
 		LOGGER.debug("Authenticating user by IP address...");
 		String ipAddress = request.getRemoteAddr();
-		UserIdentity userIdentity = ServiceInitializer.getDAOHandler().getSQLDAO(IPAuthenticationDAO.class).resolveUserIdentity(ipAddress);
+		UserIdentity userIdentity = ServiceInitializer.getDAOHandler().getDAO(IPAuthenticationDAO.class).resolveUserIdentity(ipAddress);
 		if(userIdentity != null){
 			LOGGER.debug("Granting permissions for user, id: "+userIdentity.getUserId()+" from IP address: "+ipAddress);
 		}

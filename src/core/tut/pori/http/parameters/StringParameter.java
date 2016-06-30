@@ -94,7 +94,7 @@ public class StringParameter extends HTTPParameter {
 	@Override
 	public void initialize(InputStream stream) throws IllegalArgumentException {
 		try {
-			_value = IOUtils.toString(stream);
+			_value = IOUtils.toString(stream, core.tut.pori.http.Definitions.CHARSET_UTF8);
 		} catch (IOException ex) {
 			LOGGER.error(ex, ex);
 			throw new IllegalArgumentException("Failed to read HTTP body.");

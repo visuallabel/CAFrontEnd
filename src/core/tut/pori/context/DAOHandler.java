@@ -21,8 +21,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import core.tut.pori.dao.SQLDAO;
-import core.tut.pori.dao.SolrDAO;
+import core.tut.pori.dao.DAO;
 import core.tut.pori.utils.StringUtils;
 
 /**
@@ -51,7 +50,7 @@ public class DAOHandler {
 	private void initialize() throws BeansException{
 		LOGGER.debug("Initializing handler...");
 		Date started = new Date();
-		_context = new ClassPathXmlApplicationContext(core.tut.pori.properties.SystemProperty.CONFIGURATION_FILE_PATH+DATABASE_CONFIGURATION_FILE);
+		_context = new ClassPathXmlApplicationContext(ServiceInitializer.getConfigHandler().getConfigFilePath()+DATABASE_CONFIGURATION_FILE);
 
 		LOGGER.debug("DAO Handler initialized in "+StringUtils.getDurationString(started, new Date()));
 	}
@@ -74,7 +73,7 @@ public class DAOHandler {
 	 * @param cls
 	 * @return the dao or null if none exists
 	 */
-	public <T extends SQLDAO> T getSQLDAO(Class<T> cls){
+	public <T extends DAO> T getDAO(Class<T> cls){
 		try{
 			for(T candidate : _context.getBeansOfType(cls).values()){
 				if(candidate.getClass().equals(cls)){
@@ -86,25 +85,5 @@ public class DAOHandler {
 		}
 		return null;
 	}
-	
-	/**
-	 * Note: the comparison is done using exactly the given class, no super or sub class of the type will be returned.
-	 * 
-	 * Do NOT close or cleanup the instances returned by this method, the initialization and destruction is handled automatically.
-	 * 
-	 * @param cls
-	 * @return the dao or null if none exists
-	 */
-	public <T extends SolrDAO> T getSolrDAO(Class<T> cls){
-		try{
-			for(T candidate : _context.getBeansOfType(cls).values()){
-				if(candidate.getClass().equals(cls)){
-					return candidate;
-				}
-			}
-		} catch (BeansException ex){
-			LOGGER.warn(ex, ex);		
-		}
-		return null;
-	}
+
 }

@@ -100,7 +100,7 @@ public class WebSocketHandler {
 	private void initialize(){
 		LOGGER.debug("Initializing handler...");
 		Date started = new Date();
-		_context = new ClassPathXmlApplicationContext(core.tut.pori.properties.SystemProperty.CONFIGURATION_FILE_PATH+SERVLET_CONFIGURATION_FILE);
+		_context = new ClassPathXmlApplicationContext(ServiceInitializer.getConfigHandler().getConfigFilePath()+SERVLET_CONFIGURATION_FILE);
 
 		LOGGER.debug("Class Path XML Context initialized in "+StringUtils.getDurationString(started, new Date()));
 

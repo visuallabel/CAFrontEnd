@@ -81,7 +81,7 @@ public class LongParameter extends HTTPParameter {
 	@Override
 	public void initialize(InputStream stream) throws IllegalArgumentException {
 		try {
-			_values = new long[]{Long.parseLong(IOUtils.toString(stream))};
+			_values = new long[]{Long.parseLong(IOUtils.toString(stream, core.tut.pori.http.Definitions.CHARSET_UTF8))};
 		} catch (IOException | NumberFormatException ex) {
 			LOGGER.error(ex, ex);
 			throw new IllegalArgumentException("Failed to read HTTP body.");

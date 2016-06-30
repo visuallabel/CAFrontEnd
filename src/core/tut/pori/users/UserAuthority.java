@@ -29,12 +29,16 @@ public final class UserAuthority {
 	public static final String ROLE_BACKEND = "ROLE_BACKEND";
 	/** user role string */
 	public static final String ROLE_USER = "ROLE_USER";
+	/** moderator role string */
+	public static final String ROLE_MODERATOR = "ROLE_MODERATOR";
 	/** authority admin */
 	public static final GrantedAuthority AUTHORITY_ROLE_ADMIN = new SimpleGrantedAuthority(ROLE_ADMIN);
 	/** authority back-end */
 	public static final GrantedAuthority AUTHORITY_ROLE_BACKEND = new SimpleGrantedAuthority(ROLE_BACKEND);
 	/** authority user */
 	public static final GrantedAuthority AUTHORITY_ROLE_USER = new SimpleGrantedAuthority(ROLE_USER);
+	/** authority moderator */
+	public static final GrantedAuthority AUTHORITY_ROLE_MODERATOR = new SimpleGrantedAuthority(ROLE_MODERATOR);
 	
 	/**
 	 * 
@@ -51,6 +55,8 @@ public final class UserAuthority {
 					return AUTHORITY_ROLE_ADMIN;
 				case ROLE_BACKEND:
 					return AUTHORITY_ROLE_BACKEND;
+				case ROLE_MODERATOR:
+					return AUTHORITY_ROLE_MODERATOR;
 				default:
 					break;
 			}

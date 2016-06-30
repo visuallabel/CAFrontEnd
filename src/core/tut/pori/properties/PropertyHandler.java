@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import core.tut.pori.context.RESTHandler;
+import core.tut.pori.context.ServiceInitializer;
 import core.tut.pori.utils.StringUtils;
 
 /**
@@ -41,20 +42,21 @@ import core.tut.pori.utils.StringUtils;
 public final class PropertyHandler {
 	private static final Logger LOGGER = Logger.getLogger(PropertyHandler.class);
 	private static final String PROPERTIES_CONFIGURATION_FILE = "properties-context.xml";
-	/* services */
+	private static final String SYSTEM_PROPERTY_FILE = "system.properties";
 	private String _bindContext = null;
-	private String _restBindContext = null;
 	private ClassPathXmlApplicationContext _context = null;
 	private Map<Class<?>,SystemProperty> _properties = null;
+	private String _restBindContext = null;
 	
 	/**
 	 * @param context 
-	 * 
+	 * @throws IllegalArgumentException thrown on missing configuration value
 	 */
-	public PropertyHandler(ServletContext context){
+	public PropertyHandler(ServletContext context) throws IllegalArgumentException{
 		LOGGER.debug("Initializing handler...");
 		Date started = new Date();
-		_context = new ClassPathXmlApplicationContext(core.tut.pori.properties.SystemProperty.CONFIGURATION_FILE_PATH+PROPERTIES_CONFIGURATION_FILE);
+		
+		_context = new ClassPathXmlApplicationContext(ServiceInitializer.getConfigHandler().getConfigFilePath()+PROPERTIES_CONFIGURATION_FILE);
 		LOGGER.debug("Class Path XML Context initialized in "+StringUtils.getDurationString(started, new Date()));
 		
 		loadProperties(context);
@@ -67,7 +69,11 @@ public final class PropertyHandler {
 	 */
 	private void loadProperties(ServletContext context) throws IllegalArgumentException{
 		ClassLoader classLoader = getClass().getClassLoader();
-		try (InputStream systemStream = classLoader.getResourceAsStream(SystemProperty.SYSTEM_PROPERTY_FILE)) {
+		try (InputStream systemStream = classLoader.getResourceAsStream(ServiceInitializer.getConfigHandler().getPropertyFilePath()+SYSTEM_PROPERTY_FILE)) {
+			if(systemStream == null){
+				throw new IllegalArgumentException("Failed to load system property file: "+ServiceInitializer.getConfigHandler().getPropertyFilePath()+SYSTEM_PROPERTY_FILE);
+			}
+			
 			Properties systemProperties = new Properties();
 			systemProperties.load(systemStream);
 			systemProperties = UnmodifiableProperties.unmodifiableProperties(systemProperties);
@@ -86,7 +92,7 @@ public final class PropertyHandler {
 			for(Iterator<SystemProperty> iter = propertyMap.values().iterator();iter.hasNext();){
 				SystemProperty property = iter.next();
 				String propertyFilePath = property.getPropertyFilePath();
-				if(propertyFilePath != null && !propertyFilePath.equals(SystemProperty.SYSTEM_PROPERTY_FILE)){	// check if custom property file location has been given
+				if(propertyFilePath != null && !propertyFilePath.equals(ServiceInitializer.getConfigHandler().getPropertyFilePath()+SYSTEM_PROPERTY_FILE)){	// check if custom property file location has been given
 					LOGGER.debug("Found property with custom file path.");
 					Properties customProperties = new Properties();
 					try (InputStream customStream = classLoader.getResourceAsStream(propertyFilePath)) {

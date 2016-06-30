@@ -36,14 +36,13 @@ import core.tut.pori.utils.StringUtils;
  *
  */
 public class ServiceInitializer implements ServletContextListener{
-	private static final String LOG4J_CONFIGURATION_FILE = "../log4j2.xml";
-	private static final String LOG4J_SYSTEM_PROPERTY = "log4j.configurationFile";
-	private static Logger LOGGER = null;
+	private static ConfigHandler CONFIG_HANDLER = null;
 	private static DAOHandler DAO_HANDLER = null;
-	private static ServiceHandler SERVICE_HANDLER = null;
-	private static PropertyHandler PROPERTY_HANDLER = null;
-	private static ExecutorHandler EXECUTOR_HANDLER = null;
 	private static EventHandler EVENT_HANDLER = null;
+	private static ExecutorHandler EXECUTOR_HANDLER = null;
+	private static Logger LOGGER = null;
+	private static PropertyHandler PROPERTY_HANDLER = null;
+	private static ServiceHandler SERVICE_HANDLER = null;
 	private static WebSocketHandler WEBSOCKET_HANDLER = null;
 	
 	@Override
@@ -80,9 +79,9 @@ public class ServiceInitializer implements ServletContextListener{
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		Date started = new Date();
-		System.setProperty(LOG4J_SYSTEM_PROPERTY, LOG4J_CONFIGURATION_FILE);	// Load logger configuration
-		LOGGER = Logger.getLogger(ServiceInitializer.class);
 		ServletContext context = servletContextEvent.getServletContext();
+		CONFIG_HANDLER = new ConfigHandler(context);	//config handler must be first
+		LOGGER = Logger.getLogger(ServiceInitializer.class);
 		PROPERTY_HANDLER = new PropertyHandler(context);
 		DAO_HANDLER = new DAOHandler();
 		SERVICE_HANDLER = new ServiceHandler();
@@ -90,6 +89,14 @@ public class ServiceInitializer implements ServletContextListener{
 		EVENT_HANDLER = new EventHandler();
 		WEBSOCKET_HANDLER = new WebSocketHandler();
 		LOGGER.info("Context initialized in "+StringUtils.getDurationString(started, new Date()));
+	}
+	
+	/**
+	 * 
+	 * @return Config handler instance.
+	 */
+	public static ConfigHandler getConfigHandler(){
+		return CONFIG_HANDLER;
 	}
 
 	/**

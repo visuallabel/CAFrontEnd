@@ -22,12 +22,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.EncoderException;
-import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -100,7 +96,7 @@ public class UserCore {
 			return;
 		}
 		
-		UserDAO userDao = ServiceInitializer.getDAOHandler().getSQLDAO(UserDAO.class);
+		UserDAO userDao = ServiceInitializer.getDAOHandler().getDAO(UserDAO.class);
 		EventHandler eventHandler = ServiceInitializer.getEventHandler();
 		for(UserServiceType t : serviceTypes){
 			if(userDao.deleteExternalAccountConnection(t, userId)){
@@ -117,7 +113,7 @@ public class UserCore {
 	 * @return user identity for the username or null if not found
 	 */
 	public static UserIdentity getUserIdentity(String username){
-		return ServiceInitializer.getDAOHandler().getSQLDAO(UserDAO.class).getUser(username);
+		return ServiceInitializer.getDAOHandler().getDAO(UserDAO.class).getUser(username);
 	}
 	
 	/**
@@ -126,7 +122,7 @@ public class UserCore {
 	 * @return user identity for the given id or null if not found
 	 */
 	public static UserIdentity getUserIdentity(Long userId){
-		return ServiceInitializer.getDAOHandler().getSQLDAO(UserDAO.class).getUser(userId);
+		return ServiceInitializer.getDAOHandler().getDAO(UserDAO.class).getUser(userId);
 	}
 	
 	/**
@@ -136,7 +132,7 @@ public class UserCore {
 	 * @return list of connections for the given user or null if none was found
 	 */
 	public static ExternalAccountConnectionList getExternalAccountConnections(EnumSet<UserServiceType> serviceTypes, UserIdentity userId){
-		return ServiceInitializer.getDAOHandler().getSQLDAO(UserDAO.class).getExternalAccountConnections(serviceTypes, userId);
+		return ServiceInitializer.getDAOHandler().getDAO(UserDAO.class).getExternalAccountConnections(serviceTypes, userId);
 	}
 	
 	/**
@@ -161,7 +157,7 @@ public class UserCore {
 	 * @return UserIdentity with the id value set or null if none is found
 	 */
 	public static UserIdentity getUserId(ExternalAccountConnection connection){
-		return ServiceInitializer.getDAOHandler().getSQLDAO(UserDAO.class).getUserId(connection);
+		return ServiceInitializer.getDAOHandler().getDAO(UserDAO.class).getUserId(connection);
 	}
 	
 	/**
@@ -174,7 +170,7 @@ public class UserCore {
 		if(!UserIdentity.isValid(userId)){
 			throw new IllegalArgumentException("Bad userId.");
 		}
-		ServiceInitializer.getDAOHandler().getSQLDAO(UserDAO.class).insertExternalAccountConnection(connection, userId);
+		ServiceInitializer.getDAOHandler().getDAO(UserDAO.class).insertExternalAccountConnection(connection, userId);
 	}
 	
 	/**
@@ -192,7 +188,7 @@ public class UserCore {
 		
 		UserIdentity userId = new UserIdentity(registration.getEncryptedPassword(), null, registration.getUsername());
 		userId.addAuthority(UserAuthority.AUTHORITY_ROLE_USER); // add with role user
-		if(ServiceInitializer.getDAOHandler().getSQLDAO(UserDAO.class).addUser(userId)){
+		if(ServiceInitializer.getDAOHandler().getDAO(UserDAO.class).addUser(userId)){
 			registration.setRegisteredUserId(userId);
 			ServiceInitializer.getEventHandler().publishEvent(new UserServiceEvent(EventType.USER_CREATED, null, UserCore.class, userId));
 			return RegistrationStatus.OK;
@@ -209,7 +205,7 @@ public class UserCore {
 	 * @throws IllegalArgumentException
 	 */
 	public static void unregister(UserIdentity userId) throws IllegalArgumentException{
-		if(ServiceInitializer.getDAOHandler().getSQLDAO(UserDAO.class).removeUser(userId)){
+		if(ServiceInitializer.getDAOHandler().getDAO(UserDAO.class).removeUser(userId)){
 			ServiceInitializer.getSessionHandler().removeSessionInformation(userId); // remove all user's sessions
 			ServiceInitializer.getEventHandler().publishEvent(new UserServiceEvent(EventType.USER_REMOVED, null, UserCore.class, userId));
 		}else{
@@ -229,7 +225,7 @@ public class UserCore {
 			throw new IllegalArgumentException("Bad authenticated user.");
 		}
 		Long authId = authenticatedUser.getUserId();
-		UserDAO userDAO = ServiceInitializer.getDAOHandler().getSQLDAO(UserDAO.class);
+		UserDAO userDAO = ServiceInitializer.getDAOHandler().getDAO(UserDAO.class);
 		authenticatedUser = userDAO.getUser(authId); // populate the details
 		if(!UserIdentity.isValid(authenticatedUser)){
 			LOGGER.warn("Could not resolve user identity for user, id: "+authId);
@@ -248,47 +244,6 @@ public class UserCore {
 		}else{
 			return userDAO.getUsers(userIdFilter);
 		}
-	}
-	
-	/**
-	 * Combines nonce and redirectUri together for redirecting things after FB has responded
-	 * @param nonce
-	 * @param redirectUri
-	 * @return the nonce and redirection in a combined, URL encoded form
-	 */
-	public static String urlEncodedCombinedNonce(String nonce, String redirectUri){
-		String retval = null;
-		try {
-			if(StringUtils.isEmpty(redirectUri)){
-				retval = new URLCodec().encode(nonce);
-			}else{
-				retval = new URLCodec().encode(nonce+Definitions.NONCE_SEPARATOR+redirectUri);
-			}
-		} catch (EncoderException ex) {
-			LOGGER.error(ex, ex);
-		}
-		return retval;
-	}
-	
-	/**
-	 * 
-	 * @param nonce
-	 * @return pair of "nonce","redirectUri" or null if NONCE_SEPARATOR ".-." is not found
-	 */
-	public static Pair<String, String> getNonceAndRedirectUri(String nonce){
-		Pair<String, String> nonceAndUrl = null;
-		try {
-			String decoded = new URLCodec().decode(nonce);
-			String[] splitted = StringUtils.split(decoded, Definitions.NONCE_SEPARATOR, 2);
-			if(splitted.length > 1){
-				nonceAndUrl = Pair.of(splitted[0], splitted[1]);
-			}else{
-				return null;
-			}
-		} catch (DecoderException ex) {
-			LOGGER.error(ex, ex);
-		}
-		return nonceAndUrl;
 	}
 	
 	/**
